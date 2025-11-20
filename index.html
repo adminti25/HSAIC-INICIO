@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Web - Hospital Chapultepec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #004a8d;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .main-header {
+      background-color: #003366;
+      padding: 1rem;
+      text-align: center;
+    }
+    .main-header img {
+      max-height: 80px;
+      width: auto;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .rectangle {
+      background-color: #f5f5f5;
+      padding: 0.9rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar izquierdo */
+    .sidebar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .sidebar-title, .news-title {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #1a73ff;
+      text-decoration: underline;
+      margin-bottom: 0.7rem;
+    }
+    .link {
+      color: #2563eb;
+      display: block;
+      padding: 0.35rem 0;
+      font-size: 0.93rem;
+    }
+    .link:hover { color: #1a73ff; text-decoration: underline; }
+    .news-item {
+      background-color: #e8f5e8;
+      padding: 0.65rem;
+      border-left: 5px solid #4caf50;
+      border-radius: 8px;
+      margin-bottom: 0.65rem;
+      font-size: 0.88rem;
+    }
+
+    /* Higiene de manos */
+    .hygiene-box {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border: 3px solid #1e88e5;
+      border-radius: 16px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(30, 136, 229, 0.2);
+    }
+    .hygiene-box h3 {
+      color: #1565c0;
+      font-size: 1.3rem;
+      margin: 0.5rem 0 0.8rem;
+      font-weight: bold;
+    }
+    .hygiene-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .hygiene-box p {
+      margin: 0.8rem 0 0;
+      font-size: 0.95rem;
+      color: #0d47a1;
+      font-weight: 600;
+    }
+
+    /* Área principal */
+    .main-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr 360px;
+      grid-template-rows: auto auto;
+      gap: 1rem 1rem;
+    }
+
+    .extensions-box { grid-row: 1; }
+    .notes-box { grid-row: 2; align-self: start; }
+    .english-box { grid-row: 1 / 3; align-self: start; }
+    .right-column { grid-row: 1 / 3; display: flex; flex-direction: column; gap: 8px; }
+
+    .orange-folder, .blue-folder {
+      height: 380px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .orange-folder { background: linear-gradient(135deg, #ff9800, #f57c00); font-size: 2.4rem; }
+    .orange-folder:hover { transform: scale(1.04); }
+    .blue-folder { background: linear-gradient(135deg, #4fc3f7, #29b6f6); font-size: 2.1rem; padding: 1rem; }
+    .blue-folder:hover { transform: scale(1.04); }
+    .blue-folder .subtitle { font-size: 1.1rem; margin-top: 0.8rem; opacity: 0.95; }
+
+    /* ===== EXTENSIONES: TABLA PEGADA AL BORDE + TODAS LAS 220+ FILAS ===== */
+    .main-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1a73ff;
+      text-decoration: underline;
+      margin-bottom: 0.6rem;
+      text-align: center;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.55rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 0.93rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .extensions-box {
+      display: flex;
+      flex-direction: column;
+    }
+    .extensions-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .table-wrapper {
+      flex: 1;
+      max-height: 302px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: white;
+      border-radius: 8px;
+      margin: 0 -0.9rem;
+      margin-top: -0.7rem;
+      padding: 0 0.9rem;
+    }
+    .table-wrapper::-webkit-scrollbar {
+      width: 10px;
+    }
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 8px;
+    }
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 8px;
+    }
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    .extensions-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.92rem;
+      margin: 0;
+    }
+    .extensions-table th, .extensions-table td {
+      padding: 0.58rem 1rem;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      text-align: left;
+    }
+    .extensions-table tr:first-child th {
+      border-top: 1px solid #ddd;
+    }
+    .extensions-table tr:last-child td {
+      border-bottom: 1px solid #ddd;
+    }
+    .extensions-table th {
+      background-color: #e3f2fd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-weight: 600;
+    }
+    .extensions-table th:first-child { border-top-left-radius: 8px; border-left: none; }
+    .extensions-table th:last-child { border-top-right-radius: 8px; border-right: none; }
+    .extensions-table td:first-child { border-left: none; }
+    .extensions-table td:last-child { border-right: none; }
+    .extensions-table th:nth-child(1), .extensions-table td:nth-child(1) { width: 70%; }
+    .extensions-table th:nth-child(2), .extensions-table td:nth-child(2) { width: 30%; text-align: center; }
+
+    /* Resto igual */
+    .english-title { font-size: 1.15rem; font-weight: bold; color: #1a73ff; text-decoration: underline; margin-bottom: 0.7rem; text-align: center; }
+    .english-vertical { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+    .staff-card { background: white; border-radius: 12px; padding: 0.9rem; width: 100%; max-width: 280px; text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+    .photo-placeholder { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #1a73ff; background-color: #e3f2fd; margin: 0 auto 0.6rem; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #1a73ff; font-weight: bold; }
+    .notepad { width: 100%; min-height: 140px; padding: 0.8rem; border: 1px solid #ccc; border-radius: 10px; font-size: 0.93rem; resize: vertical; }
+
+    @media (max-width: 1200px) {
+      .main-area { grid-template-columns: 1fr; }
+      .right-column { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-header">
+    <img src="logo-image.jpg" alt="Logo Hospital Chapultepec">
+  </div>
+
+  <div class="container">
+    <div class="sidebar-left">
+      <div class="rectangle">
+        <h2 class="sidebar-title">Enlaces Rápidos</h2>
+        <a href="#" class="link">Sitio Web Corporativo</a>
+        <a href="#" class="link">Intramed</a>
+        <a href="#" class="link">Jira - Services</a>
+        <a href="#" class="link">Edenmed</a>
+      </div>
+
+      <div class="rectangle">
+        <h2 class="news-title">Noticias</h2>
+        <div class="news-item">SATISFACCION DEL MES 95.37</div>
+        <div class="news-item">CLIMA LABORAL  CES 69.91%</div>
+        <div class="news-item">CLIMA LABORAL  NPS 77.65%</div>
+        <div class="news-item">CALIFICACION DE LA CERTIFICACION TOTAL DE SAN ANGEL INN 98.1%</div>
+      </div>
+
+      <div class="hygiene-box">
+        <h3>HIGIENE DE MANOS</h3>
+        <img src="https://www.who.int/images/default-source/health-topics/coronavirus/myth-busters/52.png?sfvrsn=4f5ab7f4_10" alt="Higiene de manos">
+        <p>Lávate las manos y salva vidas</p>
+      </div>
+    </div>
+
+    <div class="main-area">
+
+      <!-- EXTENSIONES TELEFÓNICAS - TODAS LAS 220+ COMPLETAS -->
+      <div class="rectangle extensions-box">
+        <h2 class="main-title">Extensiones Telefónicas</h2>
+        <input type="text" id="searchInput" class="search-input" placeholder="Buscar contacto..." onkeyup="filterExtensions()">
+        <div class="extensions-content">
+          <div class="table-wrapper">
+            <table class="extensions-table" id="extensionsTable">
+              <thead>
+                <tr><th>Contacto</th><th>Ext</th></tr>
+              </thead>
+              <tbody>
+<tr><td>Acceso Burdeos</td><td>31910</td></tr>
+<tr><td>Acropolís</td><td>31084</td></tr>
+<tr><td>Adán Rincón Sandoval</td><td>31058</td></tr>
+<tr><td>Admisión 2</td><td>31011</td></tr>
+<tr><td>Admisión Urgencias</td><td>31018</td></tr>
+<tr><td>Alma Rocio Paniagua Rodríguez</td><td>31045</td></tr>
+<tr><td>Amparo Pérez Andrés Lucio</td><td>31078</td></tr>
+<tr><td>Analista de compras</td><td>31030</td></tr>
+<tr><td>Analista de compras</td><td>31046</td></tr>
+<tr><td>Analista de compras</td><td>31047</td></tr>
+<tr><td>Analista de facturación</td><td>31038</td></tr>
+<tr><td>Analista de facturación</td><td>31039</td></tr>
+<tr><td>Analistas de Mesa de Control Operaciones</td><td>31016</td></tr>
+<tr><td>Asistente 101</td><td>31221</td></tr>
+<tr><td>Asistente 103</td><td>31223</td></tr>
+<tr><td>Asistente 104</td><td>31224</td></tr>
+<tr><td>Asistente 105</td><td>31225</td></tr>
+<tr><td>Asistente 106</td><td>31226</td></tr>
+<tr><td>Asistente 107</td><td>31227</td></tr>
+<tr><td>Asistente 108</td><td>31228</td></tr>
+<tr><td>Asistente 109</td><td>31229</td></tr>
+<tr><td>Asistente 110</td><td>31230</td></tr>
+<tr><td>Asistente 201</td><td>31321</td></tr>
+<tr><td>Asistente 202</td><td>31322</td></tr>
+<tr><td>Asistente 203</td><td>31323</td></tr>
+<tr><td>Asistente 204</td><td>31324</td></tr>
+<tr><td>Asistente 205</td><td>31325</td></tr>
+<tr><td>Asistente 206</td><td>31326</td></tr>
+<tr><td>Asistente 207</td><td>31327</td></tr>
+<tr><td>Asistente 208</td><td>31328</td></tr>
+<tr><td>Asistente 209</td><td>31329</td></tr>
+<tr><td>Asistente 210</td><td>31330</td></tr>
+<tr><td>Asistente 301</td><td>31421</td></tr>
+<tr><td>Asistente 302</td><td>31422</td></tr>
+<tr><td>Asistente 303</td><td>31423</td></tr>
+<tr><td>Asistente 304</td><td>31424</td></tr>
+<tr><td>Asistente 305</td><td>31425</td></tr>
+<tr><td>Asistente 306</td><td>31426</td></tr>
+<tr><td>Asistente 307</td><td>31427</td></tr>
+<tr><td>Asistente 308</td><td>31428</td></tr>
+<tr><td>Asistente 309</td><td>31429</td></tr>
+<tr><td>Asistente 310</td><td>31430</td></tr>
+<tr><td>Asistente 401</td><td>31521</td></tr>
+<tr><td>Asistente 402</td><td>31522</td></tr>
+<tr><td>Asistente 403</td><td>31523</td></tr>
+<tr><td>Asistente 404</td><td>31524</td></tr>
+<tr><td>Asistente 405</td><td>31525</td></tr>
+<tr><td>Asistente 406</td><td>31526</td></tr>
+<tr><td>Asistente 407</td><td>31527</td></tr>
+<tr><td>Asistente 408</td><td>31528</td></tr>
+<tr><td>Asistente 409</td><td>31529</td></tr>
+<tr><td>Asistente 410</td><td>31530</td></tr>
+<tr><td>Asistente 501</td><td>31621</td></tr>
+<tr><td>Asistente 502</td><td>31622</td></tr>
+<tr><td>Asistente 503</td><td>31623</td></tr>
+<tr><td>Asistente 504</td><td>31624</td></tr>
+<tr><td>Asistente 505</td><td>31625</td></tr>
+<tr><td>Asistente 506</td><td>31626</td></tr>
+<tr><td>Asistente 507</td><td>31627</td></tr>
+<tr><td>Asistente 508</td><td>31628</td></tr>
+<tr><td>Asistente 509</td><td>31629</td></tr>
+<tr><td>Asistente 510</td><td>31630</td></tr>
+<tr><td>Auxiliar de archivo clinico</td><td>31065</td></tr>
+<tr><td>Beatriz Adriana García Alvarado</td><td>31035</td></tr>
+<tr><td>C.P. Anahi Fonseca Betancourt</td><td>31056</td></tr>
+<tr><td>COE Auditorio</td><td>31092</td></tr>
+<tr><td>Caja General</td><td>31010</td></tr>
+<tr><td>Central Labor</td><td>31090</td></tr>
+<tr><td>Central Urgencias</td><td>31005</td></tr>
+<tr><td>Central de Enfermería 2</td><td>31102</td></tr>
+<tr><td>Central de Enfermería 3</td><td>31103</td></tr>
+<tr><td>Central de Enfermería 4</td><td>31104</td></tr>
+<tr><td>Ceye Quirofano</td><td>31022</td></tr>
+<tr><td>Clinica de Cateteres</td><td>31088</td></tr>
+<tr><td>Club Medicos</td><td>31701</td></tr>
+<tr><td>Conmutador Recepción 1</td><td>31000</td></tr>
+<tr><td>Conmutador Recepción 2</td><td>31196</td></tr>
+<tr><td>Conmutador Torre</td><td>31200</td></tr>
+<tr><td>Consulta Externa</td><td>31201</td></tr>
+<tr><td>Consulta Externa 2</td><td>31202</td></tr>
+<tr><td>Consultorio 101</td><td>31991</td></tr>
+<tr><td>Consultorio 102</td><td>31992</td></tr>
+<tr><td>Consultorio 103</td><td>31203</td></tr>
+<tr><td>Consultorio 104</td><td>31204</td></tr>
+<tr><td>Consultorio 106</td><td>31206</td></tr>
+<tr><td>Consultorio 107</td><td>31207</td></tr>
+<tr><td>Consultorio 108</td><td>31208</td></tr>
+<tr><td>Consultorio 109</td><td>31209</td></tr>
+<tr><td>Consultorio 110</td><td>31210</td></tr>
+<tr><td>Consultorio 201</td><td>31301</td></tr>
+<tr><td>Consultorio 202</td><td>31302</td></tr>
+<tr><td>Consultorio 203</td><td>31303</td></tr>
+<tr><td>Consultorio 204</td><td>31304</td></tr>
+<tr><td>Consultorio 205</td><td>31305</td></tr>
+<tr><td>Consultorio 206</td><td>31306</td></tr>
+<tr><td>Consultorio 207</td><td>31307</td></tr>
+<tr><td>Consultorio 208</td><td>31308</td></tr>
+<tr><td>Consultorio 209</td><td>31309</td></tr>
+<tr><td>Consultorio 210</td><td>31310</td></tr>
+<tr><td>Consultorio 301</td><td>31401</td></tr>
+<tr><td>Consultorio 302</td><td>31402</td></tr>
+<tr><td>Consultorio 303</td><td>31403</td></tr>
+<tr><td>Consultorio 304</td><td>31404</td></tr>
+<tr><td>Consultorio 305</td><td>31405</td></tr>
+<tr><td>Consultorio 306</td><td>31406</td></tr>
+<tr><td>Consultorio 307</td><td>31407</td></tr>
+<tr><td>Consultorio 308</td><td>31408</td></tr>
+<tr><td>Consultorio 309</td><td>31409</td></tr>
+<tr><td>Consultorio 410</td><td>31410</td></tr>
+<tr><td>Consultorio 401</td><td>31501</td></tr>
+<tr><td>Consultorio 402</td><td>31502</td></tr>
+<tr><td>Consultorio 403</td><td>31503</td></tr>
+<tr><td>Consultorio 404</td><td>31504</td></tr>
+<tr><td>Consultorio 405</td><td>31505</td></tr>
+<tr><td>Consultorio 406</td><td>31506</td></tr>
+<tr><td>Consultorio 407</td><td>31507</td></tr>
+<tr><td>Consultorio 408</td><td>31508</td></tr>
+<tr><td>Consultorio 409</td><td>31509</td></tr>
+<tr><td>Consultorio 410</td><td>31510</td></tr>
+<tr><td>Consultorio 501</td><td>31601</td></tr>
+<tr><td>Consultorio 502</td><td>31602</td></tr>
+<tr><td>Consultorio 503</td><td>31603</td></tr>
+<tr><td>Consultorio 504</td><td>31604</td></tr>
+<tr><td>Consultorio 505</td><td>31605</td></tr>
+<tr><td>Consultorio 506</td><td>31606</td></tr>
+<tr><td>Consultorio 507</td><td>31607</td></tr>
+<tr><td>Consultorio 508</td><td>31608</td></tr>
+<tr><td>Consultorio 509</td><td>31609</td></tr>
+<tr><td>Consultorio 510</td><td>31610</td></tr>
+<tr><td>Consultorio Ginecologia</td><td>31181</td></tr>
+<tr><td>Consultorio Medicina General</td><td>31182</td></tr>
+<tr><td>Consultorio Pediatria</td><td>31183</td></tr>
+<tr><td>Consultorio dos</td><td>31008</td></tr>
+<tr><td>Consultorio uno</td><td>31009</td></tr>
+<tr><td>Contador Alejandro Karim Mendieta Chavez</td><td>31029</td></tr>
+<tr><td>Contador Bulfrano Osorio Andrade</td><td>31033</td></tr>
+<tr><td>C.P. Liliana Berenice Sosa Uribe</td><td>31040</td></tr>
+<tr><td>Contadora Alma Delia Posadas Loma</td><td>31063</td></tr>
+<tr><td>Contadora Anahí Fonseca Betancourt</td><td>31055</td></tr>
+<tr><td>Contador Benjamín Del Rio Elías</td><td>31043</td></tr>
+<tr><td>Contadora Yenelida Guzmán Rojas</td><td>31051</td></tr>
+<tr><td>Dario Vázquez Hernández</td><td>31032</td></tr>
+<tr><td>Descanso de Medicos</td><td>31027</td></tr>
+<tr><td>Dr David V</td><td>31999</td></tr>
+<tr><td>Dr. Supervision Mesa de Control</td><td>31068</td></tr>
+<tr><td>Dr. Central Urgencias</td><td>31013</td></tr>
+<tr><td>Dr. Jorge Huerta Torrijos</td><td>31091</td></tr>
+<tr><td>Dr. José Juan García Navarrete UCC</td><td>31012</td></tr>
+<tr><td>Dr. Luis Alberto Escárcega Rincón</td><td>31097</td></tr>
+<tr><td>Dra. Beatriz Elena Cano Fano</td><td>31024</td></tr>
+<tr><td>Dra. Jazmin Parra de la Merced</td><td>31021</td></tr>
+<tr><td>Dra. Noemi Marcelo Romero</td><td>31023</td></tr>
+<tr><td>Ejecutivos de admisión</td><td>31001</td></tr>
+<tr><td>Emergencias .</td><td>31188</td></tr>
+<tr><td>Enf. Beatriz Hernández</td><td>31101</td></tr>
+<tr><td>Erika Hernandez Hernandez</td><td>31037</td></tr>
+<tr><td>Erika Lopez Cruz</td><td>31107</td></tr>
+<tr><td>Farmacia 1</td><td>31109</td></tr>
+<tr><td>IGSA CAJA</td><td>31075</td></tr>
+<tr><td>Idalia Escamilla</td><td>31099</td></tr>
+<tr><td>Ing. Alan Ortiz</td><td>31083</td></tr>
+<tr><td>Ing. Alfredo Cruz Hernandez</td><td>31081</td></tr>
+<tr><td>Ing. Brayan Alexis Lozano Crisostomo</td><td>31060</td></tr>
+<tr><td>Ing. David Ugalde Rios</td><td>31108</td></tr>
+<tr><td>Ing. Eduardo Frias García</td><td>31067</td></tr>
+<tr><td>Jorge Armando Peña Estrada</td><td>31061</td></tr>
+<tr><td>Jazmin Roa</td><td>31034</td></tr>
+<tr><td>Jesús Moreno Arzate</td><td>31036</td></tr>
+<tr><td>Lic. Abraham Rea Domínguez</td><td>31053</td></tr>
+<tr><td>Lic. Agustin Franco González</td><td>31042</td></tr>
+<tr><td>Lic. Alejandra Sánchez González</td><td>31082</td></tr>
+<tr><td>Lic. Alexa Montes</td><td>31020</td></tr>
+<tr><td>Lic. Brenda Arely Alcaraz</td><td>31052</td></tr>
+<tr><td>Lic. David Vélez Jiménez</td><td>31028</td></tr>
+<tr><td>Lic. E. Salomón Galindo Hernández</td><td>31059</td></tr>
+<tr><td>Lic. Eduardo Marquez</td><td>31069</td></tr>
+<tr><td>Lic. Gonzálo Reséndiz Alarcón</td><td>31064</td></tr>
+<tr><td>Lic. Jonathan Urrutia Cruz</td><td>31041</td></tr>
+<tr><td>Lic. Karina Hernández Arce</td><td>31025</td></tr>
+<tr><td>Lic. Karina Ortega Hernandez</td><td>31002</td></tr>
+<tr><td>Lic. Miriam Mendoza Gómez</td><td>31260</td></tr>
+<tr><td>Lic. Miriam Morales</td><td>31048</td></tr>
+<tr><td>Lic. Mónica Torres Monrreal</td><td>31057</td></tr>
+<tr><td>Lic. Nora Gonzalez Sanchez</td><td>31014</td></tr>
+<tr><td>Lic. Ricardo Rodríguez López</td><td>31062</td></tr>
+<tr><td>Lic. Rocio Rojas Rojo</td><td>31049</td></tr>
+<tr><td>Lic. Rolando Sosa Martinez</td><td>31007</td></tr>
+<tr><td>Lic. Vianey Paola Obregón Santiago</td><td>31050</td></tr>
+<tr><td>Lic. Yael Hernández Vázquez</td><td>31072</td></tr>
+<tr><td>Lic. Yael Hernández Vázquez UCC</td><td>31100</td></tr>
+<tr><td>Lic. Yael Hernández Vázquez UTI MED</td><td>31071</td></tr>
+<tr><td>Lic. Yanelly Barrera Montes de Oca</td><td>31086</td></tr>
+<tr><td>Lic. Yazmin Valdivia Hernandez</td><td>31019</td></tr>
+<tr><td>Lic. Yazmin Valdivia Hernandez</td><td>31026</td></tr>
+<tr><td>Lic. Yazmin Valdivia Hernandez</td><td>31098</td></tr>
+<tr><td>Lisbeth Sandoval Gonzalez</td><td>31044</td></tr>
+<tr><td>Mesa Aseguradoras 2</td><td>31094</td></tr>
+<tr><td>Mesa Control 1</td><td>31003</td></tr>
+<tr><td>Mesa de Aseguradoras</td><td>31015</td></tr>
+<tr><td>Modulo Inbursa</td><td><td>31280</td></tr>
+<tr><td>Nutricion Hospitalaria</td><td>31076</td></tr>
+<tr><td>QFB. Eduardo Velasco Espinosa</td><td>31073</td></tr>
+<tr><td>QFI. Aranza Anhel Morales González</td><td>31066</td></tr>
+<tr><td>Quimica Maria Teresa Galicia Estrada</td><td>31096</td></tr>
+<tr><td>Recepcion Conmutador 3</td><td>31197</td></tr>
+<tr><td>Recepcion Laboratorio</td><td>31006</td></tr>
+<tr><td>Recepción Conmutador 4</td><td>31198</td></tr>
+<tr><td>Recepción Laboratorio</td><td>31095</td></tr>
+<tr><td>Recepción imagenología</td><td>31004</td></tr>
+<tr><td>Rehabilitacion HSAIC</td><td>31205</td></tr>
+<tr><td>Residencia Medica</td><td>31175</td></tr>
+<tr><td>Seguridad Recepcion</td><td>31189</td></tr>
+<tr><td>Suministros Pisos</td><td>31074</td></tr>
+<tr><td>Supervisores de enfermería</td><td>31054</td></tr>
+<tr><td>Téc. Omar Adolfo Gutiérrez Gutiérrez</td><td>31070</td></tr>
+<tr><td>Unidad de Endoscopia</td><td>31105</td></tr>
+<tr><td>libre Montes de Oca</td><td>31990</td></tr>
+<tr><td>mod sanangelinn</td><td>31080</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resto del portal igual -->
+      <div class="rectangle english-box">
+        <h2 class="english-title">Habla Inglés</h2>
+        <div class="english-vertical">
+          <div class="staff-card"><div class="photo-placeholder">?</div><div class="name">Nombre Apellido</div><div class="area">Área / Puesto</div></div>
+          <div class="staff-card"><div class="photo-placeholder">?</div><div class="name">Nombre Apellido</div><div class="area">Área / Puesto</div></div>
+          <div class="staff-card"><div class="photo-placeholder">?</div><div class="name">Nombre Apellido</div><div class="area">Área / Puesto</div></div>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <a href="https://grupohospitalario.sharepoint.com/:b:/s/HospitalesSanAngelInn/IQBDagom1FIiRphiEtAOyWAFAUkx6t23fJt8VTN8d753b1w?e=7N1Lqx" target="_blank" class="orange-folder">
+          CARPETA NARANJA<div style="font-size:1.1rem;margin-top:0.5rem;opacity:0.9;">Haz clic para abrir</div>
+        </a>
+        <a href="https://grupohospitalario.sharepoint.com/:b:/s/HospitalesSanAngelInn/IQAoHggt9QnKSp2YY_7O27MzASgTJAipE7OG4QBPJ4arAtY?e=fSwzQr" target="_blank" class="blue-folder">
+          CUADRO BÁSICO<br>DE MEDICAMENTOS<div class="subtitle">Haz clic para abrir</div>
+        </a>
+      </div>
+
+      <div class="rectangle notes-box">
+        <h2 class="sidebar-title">Bloc de Notas</h2>
+        <textarea class="notepad" id="notepad" placeholder="Notas rápidas..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function filterExtensions() {
+      const term = document.getElementById('searchInput').value.toLowerCase().trim();
+      document.querySelectorAll('#extensionsTable tbody tr').forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    }
+
+    const notepad = document.getElementById('notepad');
+    notepad.value = localStorage.getItem('notes') || '';
+    notepad.addEventListener('input', () => localStorage.setItem('notes', notepad.value));
+  </script>
+</body>
+</html>
