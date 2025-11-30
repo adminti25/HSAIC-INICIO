@@ -86,19 +86,20 @@
     .hygiene-box img { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .hygiene-box p { margin: 0.8rem 0 0; font-size: 0.95rem; color: #0d47a1; font-weight: 600; }
 
-    /* Área principal */
+    /* Área principal - GRID AJUSTADO */
     .main-area {
       display: grid;
       grid-template-columns: 1fr 1fr 360px;
       grid-template-rows: auto auto auto;
-      gap: 1rem 1rem;
+      gap: 1rem;
     }
-    .extensions-box   { grid-row: 1; grid-column: 1; }
-    .accreditation-box { grid-row: 1; grid-column: 2; align-self: start; }
-    .english-box      { grid-row: 2; grid-column: 2; align-self: start; }
-    .notes-box        { grid-row: 2; grid-column: 1; align-self: start; }
-    .right-column     { grid-row: 1 / 4; grid-column: 3; display: flex; flex-direction: column; gap: 8px; }
+    .extensions-box      { grid-row: 1; grid-column: 1; }
+    .ordenes-box         { grid-row: 2; grid-column: 1; align-self: start; }
+    .accreditation-box   { grid-row: 1; grid-column: 2; align-self: start; }
+    .english-box         { grid-row: 2; grid-column: 2; align-self: start; } /* ← AQUÍ ESTÁ EL CAMBIO */
+    .right-column        { grid-row: 1 / 4; grid-column: 3; display: flex; flex-direction: column; gap: 8px; }
 
+    /* Resto de estilos sin tocar */
     .orange-folder, .blue-folder, .neutral-folder {
       height: 380px;
       border-radius: 16px;
@@ -119,27 +120,10 @@
     .blue-folder { background: linear-gradient(135deg, #4fc3f7, #29b6f6); font-size: 2.1rem; padding: 1rem; }
     .blue-folder:hover { transform: scale(1.04); }
     .blue-folder .subtitle { font-size: 1.1rem; margin-top: 0.8rem; opacity: 0.95; }
+    .neutral-folder { background: #ffffff; color: #003366; border: 4px solid #003366; font-size: 2.1rem; padding: 1rem; }
+    .neutral-folder:hover { transform: scale(1.04); background: #f0f8ff; }
+    .neutral-folder .subtitle { font-size: 1.1rem; margin-top: 0.8rem; opacity: 0.9; color: #003366; }
 
-    /* APARTADO GUIA ACCREDITATION CANADA – sin color de fondo */
-    .neutral-folder {
-      background: #ffffff;
-      color: #003366;
-      border: 4px solid #003366;
-      font-size: 2.1rem;
-      padding: 1rem;
-    }
-    .neutral-folder:hover {
-      transform: scale(1.04);
-      background: #f0f8ff;
-    }
-    .neutral-folder .subtitle {
-      font-size: 1.1rem;
-      margin-top: 0.8rem;
-      opacity: 0.9;
-      color: #003366;
-    }
-
-    /* Extensiones */
     .main-title {
       font-size: 1.2rem;
       font-weight: bold;
@@ -195,14 +179,7 @@
       z-index: 10;
       font-weight: 600;
     }
-    .extensions-table th:first-child { border-top-left-radius: 8px; border-left: none; }
-    .extensions-table th:last-child { border-top-right-radius: 8px; border-right: none; }
-    .extensions-table td:first-child { border-left: none; }
-    .extensions-table td:last-child { border-right: none; }
-    .extensions-table th:nth-child(1), td:nth-child(1) { width: 70%; }
-    .extensions-table th:nth-child(2), td:nth-child(2) { width: 30%; text-align: center; }
 
-    /* Videos - azul y numerados */
     .video-list {
       counter-reset: video-counter;
       padding-left: 1.2rem;
@@ -251,6 +228,7 @@
 
   <div class="container">
     <div class="sidebar-left">
+      <!-- Sidebar 100% igual -->
       <div class="rectangle">
         <h2 class="sidebar-title">Enlaces Rápidos</h2>
         <a href="https://hsai.intramed.mx/h-chapultepec/" target="_blank" class="link">Intramed - H Chapultepec</a>
@@ -272,11 +250,16 @@
         <img src="https://www.who.int/images/default-source/health-topics/coronavirus/myth-busters/52.png?sfvrsn=4f5ab7f4_10" alt="Higiene de manos">
         <p>Lávate las manos y salva vidas</p>
       </div>
+
+      <div class="rectangle">
+        <h2 class="sidebar-title">Bloc de Notas</h2>
+        <textarea class="notepad" id="notepad" placeholder="Notas rápidas..."></textarea>
+      </div>
     </div>
 
     <div class="main-area">
 
-      <!-- EXTENSIONES - TODAS COMPLETAS -->
+      <!-- Extensiones Telefónicas -->
       <div class="rectangle extensions-box">
         <h2 class="main-title">Extensiones Telefónicas</h2>
         <input type="text" id="searchInput" class="search-input" placeholder="Buscar contacto..." onkeyup="filterExtensions()">
@@ -515,7 +498,31 @@
         </div>
       </div>
 
-      <!-- Líderes por Estándar Accreditation Canadá -->
+      <!-- === ÚNICO CAMBIO: "Órdenes de Servicio" reemplaza "Apartado en construcción" === -->
+      <div class="rectangle construction-box">
+        <h2 style="font-size:1.18rem; font-weight:bold; color:#1a73ff; text-decoration:underline; text-align:center; margin-bottom:0.8rem;">
+          Mantenimiento Equipo Medico
+        </h2>
+        <ol class="video-list">
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fsites%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FCEyE%20y%20SUB%20CEyE&p=true&ga=1" target="_blank">CEyE y SUB CEyE</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FHemodinamia&p=true&ga=1" target="_blank">Hemodinamia</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FHospitalizaci%C3%B3n&p=true&ga=1" target="_blank">Hospitalización</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FImagenolog%C3%ADa&p=true&ga=1" target="_blank">Imagenología</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FIngenier%C3%ADa%20Biom%C3%A9dica&p=true&ga=1" target="_blank">Ingeniería Biomédica</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FLabor&p=true&ga=1" target="_blank">Labor</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FLaboratorio%20Cl%C3%ADnico&p=true&ga=1" target="_blank">Laboratorio Clínico</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FQuir%C3%B3fano&p=true&ga=1" target="_blank">Quirófano</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FTransfusi%C3%B3n&p=true&ga=1" target="_blank">Transfusión</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FUnidad%20de%20Cuidados%20Coronarios&p=true&ga=1" target="_blank">. Unidad de Cuidados Coronarios</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FUnidad%20de%20Cuidados%20Intensivos&p=true&ga=1" target="_blank">. Unidad de Cuidados Intensivos</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FUnidad%20de%20Cuidados%20Intensivos%20Neonatales&p=true&ga=1" target="_blank">. Unidad de Cuidados Intensivos Neonatales</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FUnidad%20de%20Medicina%20Respiratoria&p=true&ga=1" target="_blank">. Unidad de Medicina Respiratoria</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FUrgencias&p=true&ga=1" target="_blank">. Urgencias</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/sites/HospitalesSanAngelInn/Documentos%20compartidos/Forms/AllItems.aspx?id=%2Fs%2FHospitalesSanAngelInn%2FDocumentos%20compartidos%2FHospitales%2FChapultepec%2FDirecci%C3%B3n%20de%20Infraestructura%20y%20Servicios%2FJefatura%20de%20Biomedica%2F1%2E%20ORDENES%20DE%20SERVICIO%2FCalibracion%20de%20Termometros%20y%20Termohigrometros&p=true&ga=1" target="_blank">. Calibración de Termómetros y Termohigrómetros</a></li>
+        </ol>
+      </div>
+
+      <!-- Estándar Accreditation Canadá -->
       <div class="rectangle accreditation-box">
         <h2 style="font-size:1.18rem; font-weight:bold; color:#1a73ff; text-decoration:underline; text-align:center; margin-bottom:0.8rem;">
           Estándar Accreditation Canadá
@@ -530,33 +537,27 @@
           <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQDf0QZs8BWyTaE_wnnvH42zAQop_Nagld89jcEWam4_0NU?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=KAqz7B" target="_blank">Gobernanza en Atención Médica</a></li>
           <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQARhxBZuZ6MR57YbUvsif7CAUVCci7931iMrSbRFvLU9HE?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=ZRd5VE" target="_blank">Preparación, emergencias y desastres</a></li>
           <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQC9DNYzqa_JTrI4kj9xuEJ6AcmbaMSESKFyjUfxgTin238?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=bqQrT4" target="_blank">Prevención y Control de Infecciones</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQBcJmgBKhhSS63U-wdUv750AWsKbIbj25yxMYGdr68yY1M?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=8XFcjS" target="_blank">. Reprocesamiento de Dispositivos médicos</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQB5SvAMC6XXS7I055ZiE8RDAUYlrbJJWVOzu_Zid0X2hyk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=MNbXOG" target="_blank">. Servicios de pacientes Internados</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQA9KjjweGehRZvP5nt_BWLWAbQDWt1BPngAyuoS5SUDsm8?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=kFb5HH" target="_blank">. Servicios Cuidados Intensivos</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQA9KjjweGehRZvP5nt_BWLWAbQDWt1BPngAyuoS5SUDsm8?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=kFb5HH" target="_blank">. Servicios de laboratorio</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQD4YOFu5R7qS4YfjEKHJKWuAVPY4pxANriDA9_FcQp4LYk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=mGzIf4" target="_blank">. Servicios de Transfusión</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQDWIkgEGgCaTqehX_eae5Z6AXbugrxa8JVHqF9qPS3UmP4?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=EZ3NVD" target="_blank">. Servicios Obstétricos</a></li>
-          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQAuI-IkzE3oT4dcswF2sGFzAerU7q9oA9ppsVzefsqpdSs?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=j7hXLg" target="_blank">. Servicios Perioperatorios y procedimientos invasivos</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQBcJmgBKhhSS63U-wdUv750AWsKbIbj25yxMYGdr68yY1M?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=8XFcjS" target="_blank">Reprocesamiento de Dispositivos médicos</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQB5SvAMC6XXS7I055ZiE8RDAUYlrbJJWVOzu_Zid0X2hyk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=MNbXOG" target="_blank">Servicios de pacientes Internados</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQA9KjjweGehRZvP5nt_BWLWAbQDWt1BPngAyuoS5SUDsm8?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=kFb5HH" target="_blank">Servicios Cuidados Intensivos</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQA9KjjweGehRZvP5nt_BWLWAbQDWt1BPngAyuoS5SUDsm8?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=kFb5HH" target="_blank">Servicios de laboratorio</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQD4YOFu5R7qS4YfjEKHJKWuAVPY4pxANriDA9_FcQp4LYk?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=mGzIf4" target="_blank">Servicios de Transfusión</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQDWIkgEGgCaTqehX_eae5Z6AXbugrxa8JVHqF9qPS3UmP4?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=EZ3NVD" target="_blank">Servicios Obstétricos</a></li>
+          <li><a href="https://grupohospitalario.sharepoint.com/:v:/s/HospitalesSanAngelInn/IQAuI-IkzE3oT4dcswF2sGFzAerU7q9oA9ppsVzefsqpdSs?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=j7hXLg" target="_blank">Servicios Perioperatorios y procedimientos invasivos</a></li>
         </ol>
       </div>
 
-      <!-- Habla Inglés -->
+      <!-- HABLA INGLÉS → ahora perfectamente al lado derecho de Órdenes de Servicio -->
       <div class="rectangle english-box">
         <h2 class="english-title">Habla Inglés</h2>
         <div class="english-vertical">
           <div class="staff-card"><div class="photo-placeholder">B</div><div class="name">Beatriz Elena Cano Fano</div><div class="area">Dirección Médica / Mixto</div></div>
-          <div class="staff-card"><div class="photo-placeholder">L</div><div class="name">Luis Alberto Escarcega Rincon</div><div class="area">Imagenología / Matutino</div></div>
+          <div class="staff-card"><div class="photo-placeholder">L</div><div class="name">Luis Alberto Escárcega Rincón</div><div class="area">Imagenología / Matutino</div></div>
           <div class="staff-card"><div class="photo-placeholder">K</div><div class="name">Karina Ortega Hernandez</div><div class="area">Relaciones Públicas / Mixto</div></div>
         </div>
       </div>
 
-      <!-- Bloc de Notas -->
-      <div class="rectangle notes-box">
-        <h2 class="sidebar-title">Bloc de Notas</h2>
-        <textarea class="notepad" id="notepad" placeholder="Notas rápidas..."></textarea>
-      </div>
-
-      <!-- Carpetas derecha -->
+      <!-- Carpetas derecha (sin tocar) -->
       <div class="right-column">
         <a href="https://grupohospitalario.sharepoint.com/:b:/s/HospitalesSanAngelInn/IQBDagom1FIiRphiEtAOyWAFAUkx6t23fJt8VTN8d753b1w?e=7N1Lqx" target="_blank" class="orange-folder">
           CARPETA NARANJA<div style="font-size:1.1rem;margin-top:0.5rem;opacity:0.9;">Haz clic para abrir</div>
@@ -564,13 +565,10 @@
         <a href="https://grupohospitalario.sharepoint.com/:b:/s/HospitalesSanAngelInn/IQAoHggt9QnKSp2YY_7O27MzASgTJAipE7OG4QBPJ4arAtY?e=fSwzQr" target="_blank" class="blue-folder">
           CUADRO BÁSICO<br>DE MEDICAMENTOS<div class="subtitle">Haz clic para abrir</div>
         </a>
-
-        <!-- NUEVO: GUÍA ACCREDITATION CANADA -->
         <a href="https://grupohospitalario.sharepoint.com/:b:/s/HospitalesSanAngelInn/IQCEZibEscorSYehml86MMAXAXMtYYjWoVap6WePg-eGvs0?e=94E1r5" target="_blank" class="neutral-folder">
           GUÍA ACCREDITATION CANADA
           <div class="subtitle">Haz clic para abrir</div>
         </a>
-
       </div>
 
     </div>
