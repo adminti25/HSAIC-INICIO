@@ -1,0 +1,2489 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-pref="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Portal Web - Hospital Chapultepec</title>
+<link rel="stylesheet" href="./webmeji.css">
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  var rm = matchMedia('(prefers-reduced-motion: reduce)');
+  var fadeTimer;
+
+  function fade() {
+    if (rm.matches) return;
+    root.classList.add('theme-fade');
+    clearTimeout(fadeTimer);
+    fadeTimer = setTimeout(function () {
+      root.classList.remove('theme-fade');
+    }, 520);
+  }
+
+  window.applyTheme = function (pref, animate) {
+    var theme = pref === 'auto' ? (mq.matches ? 'dark' : 'light') : pref;
+    if (animate && theme !== root.dataset.theme) fade();
+    root.dataset.pref = pref;
+    root.dataset.theme = theme;
+  };
+
+  var saved = null;
+  try {
+    saved = localStorage.getItem('theme');
+  } catch (e) {}
+
+  applyTheme(saved === 'light' || saved === 'dark' ? saved : 'auto');
+
+  var onSystemChange = function () {
+    if (root.dataset.pref === 'auto') applyTheme('auto', true);
+  };
+
+  if (mq.addEventListener) {
+    mq.addEventListener('change', onSystemChange);
+  } else if (mq.addListener) {
+    mq.addListener(onSystemChange);
+  }
+
+  if (!rm.matches) root.classList.add('enter-hold');
+})();
+</script>
+
+<style>
+:root {
+  --marino:#003366;
+  --acento:#1a73ff;
+  --enlace:#1565c0;
+  --oscuro:#0d47a1;
+  --cemp:#e8871e;
+  --oro:#c9a227;
+  --terra:#b4532a;
+  --tint:rgba(232,135,30,.09);
+  --bg:#e7eff9;
+  --card:#fff;
+  --card2:#eef5fc;
+  --line:#d3dfee;
+  --field:#b9cadf;
+  --text:#1f2937;
+  --muted:#4b5563;
+  --title:var(--marino);
+  --link:var(--enlace);
+  --link-h:var(--oscuro);
+  --th:#e3f2fd;
+  --head:var(--marino);
+  --acc:var(--acento);
+  --btn:#1565c0;
+  --ring:rgba(26,115,255,.3);
+  --sh:0 1px 2px rgba(0,30,70,.06),0 6px 18px rgba(0,30,70,.08);
+  --sh-h:0 2px 4px rgba(0,30,70,.08),0 12px 28px rgba(0,30,70,.15);
+  --sh-f:0 8px 18px rgba(0,30,70,.3);
+  --r:12px;
+  --gap:clamp(.75rem,1.2vw,1.25rem);
+  --fast:.2s;
+  --med:.32s;
+  --fade-dur:.9s;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --enter-dur:.6s;
+  --step:70ms;
+  --theme-dur:.4s;
+  --nudge:3px;
+  --lift:-2px;
+  --flor:url("./flor.png");
+  color-scheme:light;
+}
+
+:root[data-theme=dark] {
+  --tint:rgba(232,135,30,.12);
+  --bg:#091322;
+  --card:#112038;
+  --card2:#16294a;
+  --line:#25395a;
+  --field:#38526f;
+  --text:#e4ecf6;
+  --muted:#9fb2c9;
+  --title:#d2e5ff;
+  --link:#6eabff;
+  --link-h:#a3c8ff;
+  --th:#183154;
+  --head:#0a1c36;
+  --acc:#4d8dff;
+  --btn:#2b6fd9;
+  --ring:rgba(110,171,255,.45);
+  --sh:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.35);
+  --sh-h:0 2px 4px rgba(0,0,0,.4),0 12px 28px rgba(0,0,0,.5);
+  --sh-f:0 8px 18px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+
+@property --f1 {
+  syntax:'<color>';
+  inherits:false;
+  initial-value:#1a6fcc;
+}
+
+@property --f2 {
+  syntax:'<color>';
+  inherits:false;
+  initial-value:#1565c0;
+}
+
+*,*::before,*::after { box-sizing:border-box; }
+
+html { -webkit-text-size-adjust:100%; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  color:var(--text);
+  font:16px/1.5 'Segoe UI',system-ui,Tahoma,Geneva,Verdana,sans-serif;
+}
+
+img { max-width:100%; }
+
+:focus-visible {
+  outline:2px solid var(--acc);
+  outline-offset:2px;
+}
+
+.sr {
+  position:absolute;
+  width:1px;
+  height:1px;
+  margin:-1px;
+  padding:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+  border:0;
+}
+
+.top {
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  padding:.7rem max(clamp(.75rem,3vw,2rem),calc((100% - 1840px)/2 + 1.25rem));
+  background:var(--head);
+  border-bottom:3px solid var(--acc);
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+
+.top::after {
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  height:44px;
+  margin-top:-7px;
+  pointer-events:none;
+  background-image:url("./flor3.png"),url("./flor3.png");
+  background-position:left center, 27px center;
+  background-repeat:repeat-x,repeat-x;
+  background-size:36px 44px,36px 44px;
+}
+
+.top img {
+  display:block;
+  max-height:80px;
+  width:auto;
+  height:auto;
+}
+
+.theme {
+  display:inline-flex;
+  gap:2px;
+  padding:3px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;
+}
+
+.theme button {
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  min-height:36px;
+  padding:.4rem .8rem;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:#d7e6fb;
+  font:inherit;
+  font-size:.85rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:background-color var(--fast) var(--ease),color var(--fast) var(--ease),box-shadow var(--fast) var(--ease);
+}
+
+.theme button:hover { background:rgba(255,255,255,.14); }
+
+.theme button[aria-pressed=true] {
+  background:#fff;
+  color:var(--marino);
+  box-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+
+.theme :focus-visible { outline-color:#fff; }
+
+.theme .ic { color:inherit; }
+
+.layout {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:var(--gap);
+  align-items:start;
+  flex:1;
+  width:100%;
+  max-width:1840px;
+  margin:0 auto;
+  padding:clamp(1.1rem,2vw,1.6rem) clamp(.5rem,1.5vw,1.25rem) clamp(1rem,2vw,1.5rem);
+  overflow-x:clip;
+}
+
+.side,.main { display:contents; }
+
+.card {
+  order:3;
+  min-width:0;
+  padding:1rem 1.1rem;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow:var(--sh);
+}
+
+.c-news,.c-gol {
+  border-top:3px solid var(--cemp);
+  background-image:linear-gradient(180deg,var(--tint),transparent 140px);
+}
+
+.c-notes { order:4; }
+.main > .c-notes { grid-column: 1 / -1; }
+.c-eng { order:5; }
+.main > .c-eng { grid-column: 1 / -1; }
+.c-ext { order:2; }
+
+.acc {
+  order:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));
+  grid-auto-rows:1fr;
+  gap:var(--gap);
+  min-width:0;
+}
+
+.warn {
+  grid-column:1/-1;
+  padding:1rem;
+  border:1px solid #f1a9a9;
+  border-radius:var(--r);
+  background:#fff1f1;
+  color:#a11a1a;
+  font-weight:500;
+}
+
+[data-theme=dark] .warn {
+  background:#3a1519;
+  border-color:#7d2a31;
+  color:#ffb4b4;
+}
+
+.ct {
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin:0 0 .85rem;
+  padding-bottom:.6rem;
+  border-bottom:1px solid var(--line);
+  font-size:1.05rem;
+  font-weight:700;
+  line-height:1.3;
+  color:var(--title);
+}
+
+.ct::after {
+  content:"";
+  flex:none;
+  width:1.6rem;
+  height:1.6rem;
+  margin-left:auto;
+  background:var(--flor) center/contain no-repeat;
+  opacity:.75;
+}
+
+.ic {
+  width:1.15rem;
+  height:1.15rem;
+  flex:none;
+  color:var(--acc);
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.ct .ic {
+  width:1.9rem;
+  height:1.9rem;
+  padding:.3rem;
+  border-radius:8px;
+  background:var(--th);
+}
+
+.link {
+  display:block;
+  margin:0 -.65rem;
+  padding:.5rem .65rem;
+  border-left:3px solid transparent;
+  border-radius:8px;
+  color:var(--link);
+  font-size:.94rem;
+  font-weight:500;
+  text-decoration:underline;
+  text-decoration-color:transparent;
+  overflow-wrap:anywhere;
+}
+
+.link + .link { margin-top:2px; }
+
+.link:active { background:var(--th); }
+
+.news-item {
+  padding:.75rem .85rem;
+  background:var(--card2);
+  border-left:4px solid var(--cemp);
+  border-radius:8px;
+  font-size:.9rem;
+}
+
+.news-title {
+  margin:0 0 .4rem;
+  font-size:1rem;
+  line-height:1.3;
+  color:var(--title);
+}
+
+.news-item p { margin:.4rem 0; }
+
+.news-button {
+  display:inline-block;
+  margin-top:.5rem;
+  padding:.55rem 1rem;
+  border-radius:8px;
+  background:var(--btn);
+  color:#fff;
+  font-size:.9rem;
+  font-weight:600;
+  text-decoration:none;
+}
+
+.build {
+  text-align:center;
+  background:var(--card2);
+  border:2px dashed var(--field);
+  box-shadow:none;
+}
+
+.build h3 {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  margin:0;
+  font-size:.95rem;
+  font-weight:700;
+  color:var(--title);
+}
+
+.build img {
+  display:block;
+  height:auto;
+  margin:.8rem auto 0;
+  border-radius:8px;
+}
+
+.build img[src=""],.build p:empty { display:none; }
+
+.build p {
+  margin:.8rem 0 0;
+  font-weight:600;
+  color:var(--link-h);
+}
+
+.field {
+  display:block;
+  width:100%;
+  padding:.65rem .8rem;
+  border:1px solid var(--field);
+  border-radius:8px;
+  background-color:var(--card);
+  color:var(--text);
+  font:inherit;
+  font-size:.95rem;
+}
+
+.field::placeholder {
+  color:var(--muted);
+  opacity:.85;
+}
+
+.field:focus {
+  outline:0;
+  border-color:var(--acc);
+  box-shadow:0 0 0 3px var(--ring);
+}
+
+.notepad {
+  min-height:160px;
+  resize:vertical;
+}
+
+.search {
+  margin-bottom:.8rem;
+  padding-left:2.4rem;
+  background-repeat:no-repeat;
+  background-position:.8rem center;
+  background-size:1.1rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a90ab' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E");
+}
+
+.tw {
+  max-height:clamp(300px,58vh,620px);
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--card);
+}
+
+.tw table {
+  width:100%;
+  min-width:260px;
+  table-layout:fixed;
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:.93rem;
+}
+
+.tw th,.tw td {
+  padding:.55rem .9rem;
+  text-align:left;
+  border-bottom:1px solid var(--line);
+  overflow-wrap:anywhere;
+}
+
+.tw th {
+  position:sticky;
+  top:0;
+  z-index:1;
+  background:var(--th);
+  color:var(--title);
+  font-weight:700;
+  border-bottom:2px solid var(--cemp);
+}
+
+.tw th:last-child,.tw td:last-child { width:5.5rem; }
+
+.tw td:last-child {
+  font-weight:600;
+  color:var(--title);
+  font-variant-numeric:tabular-nums;
+}
+
+.tw td[colspan] {
+  width:auto;
+  text-align:center;
+  font-weight:400;
+  color:var(--muted);
+}
+
+.tw tbody tr:hover td { background:var(--card2); }
+.tw tbody tr:last-child td { border-bottom:0; }
+
+.empty {
+  margin:.8rem 0 0;
+  text-align:center;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.vl {
+  counter-reset:v;
+  display:grid;
+  gap:2px;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.vl li {
+  counter-increment:v;
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  gap:.6rem;
+  padding:.4rem .5rem;
+  border-radius:8px;
+}
+
+.vl li::before {
+  content:counter(v);
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:1.6rem;
+  height:1.6rem;
+  border-radius:50%;
+  background:var(--th);
+  color:var(--link);
+  font-size:.8rem;
+  font-weight:700;
+}
+
+.vl a {
+  padding-top:.1rem;
+  color:var(--link);
+  font-size:.95rem;
+  font-weight:500;
+  text-decoration:underline;
+  text-decoration-color:transparent;
+  overflow-wrap:anywhere;
+}
+
+.vl a::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:8px;
+}
+
+.vl li:has(a:focus-visible) { outline:2px solid var(--acc); }
+
+.poster { text-align:center; }
+
+.poster a {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:clamp(240px,48vh,460px);
+  padding:.5rem;
+  background:var(--card2);
+  border:1px solid var(--line);
+  border-radius:10px;
+}
+
+.poster-img {
+  display:block;
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:var(--sh);
+}
+
+[data-theme=dark] .poster-img { filter:brightness(.93); }
+
+.poster-caption {
+  margin:.9rem 0 0;
+  font-size:1rem;
+  font-weight:700;
+  line-height:1.35;
+  color:var(--title);
+}
+
+.poster-caption::before {
+  content:"";
+  display:block;
+  width:5rem;
+  height:2px;
+  margin:0 auto .7rem;
+  background:linear-gradient(90deg,transparent,var(--cemp),transparent);
+}
+
+.poster-sub {
+  max-width:72ch;
+  margin:.4rem auto 0;
+  font-size:.9rem;
+  text-align:left;
+  color:var(--muted);
+}
+
+.english-vertical {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));
+  gap:.7rem;
+}
+
+.staff-card {
+  padding:.85rem;
+  text-align:center;
+  background:var(--card2);
+  border:1px solid var(--line);
+  border-radius:10px;
+}
+
+.photo-placeholder {
+  display:grid;
+  place-items:center;
+  width:56px;
+  height:56px;
+  margin:0 auto .5rem;
+  border:3px solid var(--acc);
+  border-radius:50%;
+  background:var(--th);
+  color:var(--acc);
+  font-size:1.4rem;
+  font-weight:700;
+}
+
+.staff-card .name {
+  font-weight:600;
+  line-height:1.3;
+  color:var(--title);
+}
+
+.staff-card .area {
+  margin-top:.15rem;
+  font-size:.88rem;
+  color:var(--muted);
+}
+
+.orange-folder,.blue-folder,.neutral-folder,.red-folder {
+  min-height:96px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:1.1rem;
+  border:2px solid transparent;
+  border-radius:var(--r);
+  box-shadow:var(--sh);
+  color:#fff;
+  text-align:center;
+  text-decoration:none;
+  font-size:clamp(1.05rem,1.4vw,1.3rem);
+  font-weight:700;
+  line-height:1.25;
+  overflow-wrap:anywhere;
+}
+
+.orange-folder,.blue-folder,.red-folder { background-image:linear-gradient(135deg,var(--f1),var(--f2)); }
+
+.orange-folder { --f1:#b8520a; --f2:#9a4206; }
+.red-folder { --f1:#d32f2f; --f2:#a81f1f; }
+.blue-folder { --f1:#1a6fcc; --f2:#1565c0; }
+
+[data-theme=dark] .red-folder { --f1:#b3261e; --f2:#8e1b15; }
+[data-theme=dark] .blue-folder { --f1:#1d5fb8; --f2:#0d47a1; }
+
+.neutral-folder {
+  background-color:var(--card);
+  color:var(--title);
+  border-color:var(--title);
+}
+
+@keyframes enter-rise {
+  from {
+    opacity:0;
+    transform:translate3d(var(--dx,0px),var(--dy,12px),0);
+  }
+  to {
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes enter-failsafe { to { opacity:1; } }
+
+.acc { --i:0; }
+.c-ext { --i:1; }
+.c-links { --i:2; }
+.c-news { --i:3; }
+.build { --i:4; }
+.c-mant { --i:5; }
+.c-gol { --i:6; }
+.c-notes { --i:7; }
+.c-eng { --i:8; }
+
+.card { --delay:calc(min(var(--i,0),6) * var(--step)); }
+
+.staff-card {
+  --dx:0px;
+  --delay:calc(min(var(--i,0),6) * var(--step) + 100ms + min(var(--n,0),8) * 30ms);
+}
+
+.acc > .rise {
+  --dx:0px;
+  --delay:calc(min(var(--i,0),6) * var(--step) + min(var(--n,0),5) * 55ms);
+}
+
+@media (prefers-reduced-motion:no-preference) {
+  .rise { animation:enter-rise var(--enter-dur) var(--ease-out) var(--delay,0s) backwards; }
+
+  html.enter-hold .rise {
+    opacity:0;
+    animation:enter-failsafe .01s linear 1.6s forwards;
+  }
+}
+
+.link {
+  transition:transform var(--med) var(--ease-out),color var(--fast) var(--ease),background-color var(--fast) var(--ease),border-color var(--fast) var(--ease),text-decoration-color var(--fast) var(--ease);
+}
+
+.link:hover,.link:focus-visible {
+  color:var(--link-h);
+  background-color:var(--card2);
+  border-left-color:var(--cemp);
+  text-decoration-color:currentColor;
+}
+
+.c-news .news-item {
+  transition:transform var(--med) var(--ease-out),background-color var(--fast) var(--ease),box-shadow var(--med) var(--ease-out);
+}
+
+.c-news .news-item:hover {
+  background:var(--card);
+  box-shadow:var(--sh-h);
+}
+
+.news-button {
+  transition:transform var(--med) var(--ease-out),filter var(--fast) var(--ease),box-shadow var(--med) var(--ease-out);
+}
+
+.news-button:hover,.news-button:focus-visible {
+  filter:brightness(1.1);
+  box-shadow:0 6px 14px -6px var(--ring);
+}
+
+.staff-card {
+  transition:transform var(--med) var(--ease-out),border-color var(--fast) var(--ease),box-shadow var(--med) var(--ease-out);
+}
+
+.orange-folder,.blue-folder,.neutral-folder,.red-folder {
+  transition:transform var(--med) var(--ease-out),box-shadow var(--med) var(--ease-out),filter var(--fast) var(--ease),background-color var(--fast) var(--ease);
+}
+
+.vl li {
+  transition:transform var(--med) var(--ease-out),background-color var(--fast) var(--ease),box-shadow var(--med) var(--ease-out);
+}
+
+.vl li::before { transition:box-shadow var(--med) var(--ease-out),color var(--fast) var(--ease); }
+
+.vl a { transition:color var(--fast) var(--ease),text-decoration-color var(--fast) var(--ease); }
+
+.vl li:hover {
+  background-color:var(--card2);
+  box-shadow:inset 3px 0 0 var(--cemp);
+}
+
+.vl li:hover::before {
+  color:var(--link-h);
+  box-shadow:0 0 0 3px var(--ring);
+}
+
+.vl li:hover a,.vl a:hover {
+  color:var(--link-h);
+  text-decoration-color:currentColor;
+}
+
+.neutral-folder:hover { background-color:var(--card2); }
+
+@media (hover:hover) and (pointer:fine) {
+  .link:hover,.vl li:hover,.c-news .news-item:hover { transform:translateX(var(--nudge)); }
+
+  .staff-card:hover {
+    transform:translateY(var(--lift));
+    border-color:var(--acc);
+    box-shadow:var(--sh-h);
+  }
+
+  .news-button:hover { transform:translateY(var(--lift)); }
+
+  .orange-folder:hover,.blue-folder:hover,.neutral-folder:hover,.red-folder:hover {
+    transform:translateY(-3px);
+    box-shadow:var(--sh-f);
+  }
+
+  .orange-folder:hover,.blue-folder:hover,.red-folder:hover { filter:brightness(1.07) saturate(1.05); }
+
+  .orange-folder:active,.blue-folder:active,.neutral-folder:active,.red-folder:active,.news-button:active { transform:translateY(-1px); }
+}
+
+#golondrinosCaption,#golondrinosSub,.poster-img {
+  transition:opacity var(--fade-dur) var(--ease),transform var(--fade-dur) var(--ease-out);
+}
+
+#golondrinosCaption { transition-delay:.08s; }
+#golondrinosSub { transition-delay:.16s; }
+
+#golondrinosCaption.is-changing,
+#golondrinosSub.is-changing,
+.poster-img.is-changing {
+  opacity:0;
+  transition-duration:.6s;
+  transition-delay:0s;
+}
+
+#golondrinosCaption.is-changing,#golondrinosSub.is-changing { transform:translateY(6px); }
+
+.poster-img.is-changing { transform:scale(.985); }
+
+@media (prefers-reduced-motion:no-preference) {
+  html.theme-fade,
+  html.theme-fade body,
+  html.theme-fade :is(.top,.layout),
+  html.theme-fade :is(.top,.layout) *,
+  html.theme-fade :is(.top,.layout) *::before,
+  html.theme-fade :is(.top,.layout) *::after {
+    transition-property:background-color,border-color,color,fill,stroke,box-shadow,outline-color,text-decoration-color,filter,opacity,transform,--f1,--f2 !important;
+    transition-duration:var(--theme-dur) !important;
+    transition-timing-function:var(--ease) !important;
+    transition-delay:0s !important;
+  }
+}
+
+@media (min-width:700px) {
+  .layout { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .c-ext,.acc { grid-column:1/-1; }
+}
+
+@media (min-width:1240px) {
+  .layout { grid-template-columns:clamp(230px,19vw,300px) minmax(0,1fr); }
+
+  .side {
+    display:flex;
+    flex-direction:column;
+    gap:var(--gap);
+    min-width:0;
+  }
+
+  .main {
+    display:grid;
+    align-items:stretch;
+    gap:var(--gap);
+    min-width:0;
+    grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);
+    grid-template-areas:"ext acc" "mant gol";
+  }
+
+  .card,.acc { order:0; }
+
+  .c-ext { grid-area:ext; --i:1; }
+  .c-gol { grid-area:gol; --i:4; }
+  .c-mant { grid-area:mant; --i:3; }
+  .acc { grid-area:acc; --i:2; }
+  .c-links { --i:0; }
+  .c-news { --i:1; }
+  .build { --i:2; }
+  .c-notes { --i:3; }
+  .c-eng { --i:4; }
+
+  .side > .card { --dx:-12px; }
+  .main > .card { --dx:12px; }
+}
+
+@media (max-width:600px) {
+  .theme button { padding:.45rem .65rem; }
+  .theme button span { display:none; }
+  .card { padding:.85rem; }
+}
+
+@media (pointer:coarse) {
+  .theme button { min-height:44px; }
+  .link { padding:.7rem .65rem; }
+  .vl li { padding:.6rem .5rem; }
+  .tw td { padding:.7rem .9rem; }
+  .news-button { padding:.7rem 1.1rem; }
+}
+
+@media (max-height:520px) and (orientation:landscape) {
+  .top { padding:.4rem 1rem; }
+  .top img { max-height:48px; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation:none !important;
+    transition:none !important;
+  }
+
+  *:hover,*:active { transform:none !important; }
+}
+
+/* Ajustes del apartado Efemérides del día */
+#efemerides {
+  position: relative;
+}
+
+#efemerides h1,
+#efemerides h2,
+#efemerides h3,
+#efemerides h4,
+#efemerides h5,
+#efemerides h6 {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+#efemerides::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: url("./flor.png") center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* Botón para alternar efemérides y curiosidades */
+#efemerides {
+  position: relative;
+}
+
+#btnCambiarEfemerides {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: #004a8d;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+}
+
+#btnCambiarEfemerides:hover {
+  background: #0065b8;
+}
+
+#contenidoSabiasQue {
+  padding: 12px 42px 38px 12px;
+  line-height: 1.6;
+}
+
+#contenidoSabiasQue h3 {
+  text-align: left;
+  margin-top: 0;
+}
+
+/* Alternador del recuadro de efemérides */
+#efemerides {
+  position: relative;
+  padding-bottom: 52px;
+}
+
+#efemerides #btnCambiarEfemerides {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: #004a8d;
+  color: #fff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+
+#efemerides #btnCambiarEfemerides:hover {
+  background: #0065b8;
+}
+
+#efemerides #vistaSabiasQue h3 {
+  text-align: left;
+}
+
+/* Transición animada entre las dos vistas */
+#vistaEfemerides,
+#vistaSabiasQue {
+  transition: opacity 350ms ease, transform 350ms ease;
+  will-change: opacity, transform;
+}
+
+#vistaEfemerides.animando,
+#vistaSabiasQue.animando {
+  animation: entradaEfemeride 420ms ease both;
+}
+
+@keyframes entradaEfemeride {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #vistaEfemerides.animando,
+  #vistaSabiasQue.animando {
+    animation: none;
+  }
+}
+
+/* Carrusel semanal de efemérides */
+#contenidoSemanalEfemerides {
+  position: relative;
+}
+
+#vistaSemanalEfemeride {
+  animation: entradaSemana 450ms ease both;
+  min-height: 210px;
+}
+
+#vistaSemanalEfemeride.animando {
+  animation: entradaSemana 450ms ease both;
+}
+
+#vistaSemanalEfemeride h4 {
+  margin: 12px 0;
+}
+
+#vistaSemanalEfemeride .fechaEfemeride {
+  font-weight: 700;
+  opacity: .85;
+}
+
+#vistaSemanalEfemeride .imagenEfemeride {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin: 16px auto;
+  border-radius: 10px;
+}
+
+#vistaSemanalEfemeride .datoCurioso {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-left: 4px solid #1684c7;
+  border-radius: 8px;
+  background: rgba(22,132,199,.09);
+  animation: entradaSemana 300ms ease both;
+}
+
+.controlesSemana {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.controlesSemana button,
+#botonDatoCurioso {
+  border: 0;
+  border-radius: 24px;
+  background: #0879bd;
+  color: white;
+  padding: 10px 17px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+
+.controlesSemana button:hover,
+#botonDatoCurioso:hover {
+  background: #005b92;
+  transform: scale(1.06);
+}
+
+#botonDatoCurioso {
+  margin-top: 10px;
+}
+
+.notaRotacion {
+  text-align: center;
+  font-size: .85em;
+  opacity: .75;
+  margin-top: 12px;
+}
+
+@keyframes entradaSemana {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #vistaSemanalEfemeride,
+  #vistaSemanalEfemeride.animando,
+  #vistaSemanalEfemeride .datoCurioso {
+    animation: none;
+  }
+
+  .controlesSemana button,
+  #botonDatoCurioso {
+    transition: none;
+  }
+}
+
+/* ==========================================================
+   AMBIENTACIÓN DÍA DE MUERTOS + ANIMACIONES + PULIDO VISUAL
+   (capa añadida al final; no sustituye ningún estilo previo)
+   ========================================================== */
+:root {
+  --morado:#5b2a86;
+  --morado-2:#7a3fa8;
+  --oro-suave:rgba(201,162,39,.55);
+  --warm-a:rgba(232,135,30,.10);
+  --warm-b:rgba(91,42,134,.07);
+  --web:var(--web-br-l);
+  --web-l:var(--web-bl-l);
+  --web-br-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg%3E%3Cpath d='M100 100L1.0 100.0M100 100L8.9 61.3M100 100L30.0 30.0M100 100L62.9 8.2M100 100L100.0 1.0M76.0 100.0Q80.6 96.1 77.9 90.6M77.9 90.6Q83.6 88.9 83.0 83.0M83.0 83.0Q89.1 83.5 91.0 77.7M91.0 77.7Q96.2 80.6 100.0 76.0M56.0 100.0Q64.5 92.8 59.5 82.8M59.5 82.8Q69.9 79.7 68.9 68.9M68.9 68.9Q80.0 69.8 83.5 59.2M83.5 59.2Q93.1 64.4 100.0 56.0M36.0 100.0Q47.1 89.2 41.1 75.0M41.1 75.0Q55.2 69.8 54.7 54.7M54.7 54.7Q70.2 55.0 76.0 40.7M76.0 40.7Q89.7 47.0 100.0 36.0M16.0 100.0Q29.0 85.6 22.7 67.2M22.7 67.2Q39.8 59.4 40.6 40.6M40.6 40.6Q60.0 39.6 68.5 22.1M68.5 22.1Q86.2 28.8 100.0 16.0' fill='none' stroke='%237a6a8f' stroke-width='1.4' stroke-linecap='round' opacity='0.55'/%3E%3C/g%3E%3C/svg%3E");
+  --web-bl-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(100 0) scale(-1 1)'%3E%3Cpath d='M100 100L1.0 100.0M100 100L8.9 61.3M100 100L30.0 30.0M100 100L62.9 8.2M100 100L100.0 1.0M76.0 100.0Q80.6 96.1 77.9 90.6M77.9 90.6Q83.6 88.9 83.0 83.0M83.0 83.0Q89.1 83.5 91.0 77.7M91.0 77.7Q96.2 80.6 100.0 76.0M56.0 100.0Q64.5 92.8 59.5 82.8M59.5 82.8Q69.9 79.7 68.9 68.9M68.9 68.9Q80.0 69.8 83.5 59.2M83.5 59.2Q93.1 64.4 100.0 56.0M36.0 100.0Q47.1 89.2 41.1 75.0M41.1 75.0Q55.2 69.8 54.7 54.7M54.7 54.7Q70.2 55.0 76.0 40.7M76.0 40.7Q89.7 47.0 100.0 36.0M16.0 100.0Q29.0 85.6 22.7 67.2M22.7 67.2Q39.8 59.4 40.6 40.6M40.6 40.6Q60.0 39.6 68.5 22.1M68.5 22.1Q86.2 28.8 100.0 16.0' fill='none' stroke='%237a6a8f' stroke-width='1.4' stroke-linecap='round' opacity='0.55'/%3E%3C/g%3E%3C/svg%3E");
+  --web-br-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg%3E%3Cpath d='M100 100L1.0 100.0M100 100L8.9 61.3M100 100L30.0 30.0M100 100L62.9 8.2M100 100L100.0 1.0M76.0 100.0Q80.6 96.1 77.9 90.6M77.9 90.6Q83.6 88.9 83.0 83.0M83.0 83.0Q89.1 83.5 91.0 77.7M91.0 77.7Q96.2 80.6 100.0 76.0M56.0 100.0Q64.5 92.8 59.5 82.8M59.5 82.8Q69.9 79.7 68.9 68.9M68.9 68.9Q80.0 69.8 83.5 59.2M83.5 59.2Q93.1 64.4 100.0 56.0M36.0 100.0Q47.1 89.2 41.1 75.0M41.1 75.0Q55.2 69.8 54.7 54.7M54.7 54.7Q70.2 55.0 76.0 40.7M76.0 40.7Q89.7 47.0 100.0 36.0M16.0 100.0Q29.0 85.6 22.7 67.2M22.7 67.2Q39.8 59.4 40.6 40.6M40.6 40.6Q60.0 39.6 68.5 22.1M68.5 22.1Q86.2 28.8 100.0 16.0' fill='none' stroke='%23cdbfe6' stroke-width='1.4' stroke-linecap='round' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  --web-bl-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(100 0) scale(-1 1)'%3E%3Cpath d='M100 100L1.0 100.0M100 100L8.9 61.3M100 100L30.0 30.0M100 100L62.9 8.2M100 100L100.0 1.0M76.0 100.0Q80.6 96.1 77.9 90.6M77.9 90.6Q83.6 88.9 83.0 83.0M83.0 83.0Q89.1 83.5 91.0 77.7M91.0 77.7Q96.2 80.6 100.0 76.0M56.0 100.0Q64.5 92.8 59.5 82.8M59.5 82.8Q69.9 79.7 68.9 68.9M68.9 68.9Q80.0 69.8 83.5 59.2M83.5 59.2Q93.1 64.4 100.0 56.0M36.0 100.0Q47.1 89.2 41.1 75.0M41.1 75.0Q55.2 69.8 54.7 54.7M54.7 54.7Q70.2 55.0 76.0 40.7M76.0 40.7Q89.7 47.0 100.0 36.0M16.0 100.0Q29.0 85.6 22.7 67.2M22.7 67.2Q39.8 59.4 40.6 40.6M40.6 40.6Q60.0 39.6 68.5 22.1M68.5 22.1Q86.2 28.8 100.0 16.0' fill='none' stroke='%23cdbfe6' stroke-width='1.4' stroke-linecap='round' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  --picado-ct:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 6L4 0L8 6z' fill='%23e8871e' fill-opacity='0.7'/%3E%3Cpath d='M8 6L12 0L16 6z' fill='%23c9a227' fill-opacity='0.7'/%3E%3Cpath d='M16 6L20 0L24 6z' fill='%236b2f93' fill-opacity='0.7'/%3E%3C/svg%3E");
+  --picado-w:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 6L4 0L8 6z' fill='%23ffffff' fill-opacity='0.38'/%3E%3Cpath d='M8 6L12 0L16 6z' fill='%23ffd98a' fill-opacity='0.38'/%3E%3Cpath d='M16 6L20 0L24 6z' fill='%23ffffff' fill-opacity='0.38'/%3E%3C/svg%3E");
+  --picado-flags:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='14' viewBox='0 0 90 14'%3E%3Cpath d='M0 2.2H90' stroke='%23d9b25a' stroke-opacity='.8' stroke-width='1'/%3E%3Cpath d='M3 3H27V10L25 13L23 10L21 13L19 10L17 13L15 10L13 13L11 10L9 13L7 10L5 13L3 10ZM15 5.2L17.6 7.4L15 9.6L12.4 7.4Z' fill='%23e8871e' fill-rule='evenodd' fill-opacity='.9'/%3E%3Cpath d='M33 3H57V10L55 13L53 10L51 13L49 10L47 13L45 10L43 13L41 10L39 13L37 10L35 13L33 10ZM45 5.2L47.6 7.4L45 9.6L42.4 7.4Z' fill='%236b2f93' fill-rule='evenodd' fill-opacity='.9'/%3E%3Cpath d='M63 3H87V10L85 13L83 10L81 13L79 10L77 13L75 10L73 13L71 10L69 13L67 10L65 13L63 10ZM75 5.2L77.6 7.4L75 9.6L72.4 7.4Z' fill='%23c9a227' fill-rule='evenodd' fill-opacity='.9'/%3E%3C/svg%3E");
+}
+
+:root[data-theme=dark] {
+  --morado:#9a6bd1;
+  --morado-2:#b48be0;
+  --oro-suave:rgba(232,190,80,.5);
+  --warm-a:rgba(232,135,30,.10);
+  --warm-b:rgba(130,80,200,.12);
+  --web:var(--web-br-d);
+  --web-l:var(--web-bl-d);
+}
+
+::selection { background:rgba(232,135,30,.28); }
+
+/* Fondo con calidez muy suave (profundidad) */
+body {
+  background-image:
+    radial-gradient(900px 420px at 100% 0, var(--warm-a), transparent 70%),
+    radial-gradient(800px 460px at 0 100%, var(--warm-b), transparent 70%);
+  background-attachment:fixed;
+}
+
+/* ---------- Encabezado: papel picado ---------- */
+.top {
+  padding-top:calc(.7rem + 8px);
+  background-image:linear-gradient(100deg,transparent 55%,rgba(91,42,134,.38) 130%);
+}
+.top > * { position:relative; z-index:1; }
+.top::before {
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height:14px;
+  z-index:0;
+  pointer-events:none;
+  background:var(--picado-flags) repeat-x 0 0 / 90px 14px;
+  opacity:.9;
+  animation:picado-drift 10s ease-in-out infinite alternate;
+}
+@keyframes picado-drift {
+  from { background-position:0 0; }
+  to { background-position:14px 0; }
+}
+@media (max-height:520px) and (orientation:landscape) {
+  .top { padding-top:calc(.4rem + 8px); }
+}
+
+/* ---------- Tarjetas ---------- */
+.card {
+  position:relative;
+  padding-bottom:1.5rem;
+  transition:transform var(--med) var(--ease-out),box-shadow var(--med) var(--ease-out),border-color var(--fast) var(--ease);
+}
+.card > * { position:relative; z-index:1; }
+
+/* Telaraña decorativa en la esquina inferior (detrás del contenido) */
+.card::before {
+  content:"";
+  position:absolute;
+  right:0; bottom:0;
+  width:58px; height:58px;
+  z-index:0;
+  pointer-events:none;
+  background:var(--web) no-repeat right bottom / contain;
+  border-bottom-right-radius:var(--r);
+  transform-origin:100% 100%;
+  animation:web-sway 9s ease-in-out infinite alternate;
+}
+.c-news::before,.c-eng::before,.c-mant::before {
+  right:auto; left:0;
+  background-image:var(--web-l);
+  background-position:left bottom;
+  border-bottom-right-radius:0;
+  border-bottom-left-radius:var(--r);
+  transform-origin:0 100%;
+}
+.c-notes::before,.c-ext::before { width:70px; height:70px; }
+@keyframes web-sway {
+  from { transform:rotate(0deg) scale(1); }
+  to { transform:rotate(1.6deg) scale(1.03); }
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .card:hover {
+    transform:translateY(-2px);
+    box-shadow:var(--sh-h);
+    border-color:var(--oro-suave);
+  }
+}
+
+/* Encabezados de tarjeta: filo de papel picado en lugar de línea lisa */
+.ct {
+  border-bottom:0;
+  padding-bottom:.85rem;
+  background:
+    linear-gradient(var(--line),var(--line)) left bottom / 100% 1px no-repeat,
+    var(--picado-ct) left bottom / auto 6px repeat-x;
+  letter-spacing:.01em;
+}
+.ct::after {
+  transition:transform .7s var(--ease-out),opacity var(--fast) var(--ease);
+}
+@media (hover:hover) and (pointer:fine) {
+  .card:hover .ct::after { transform:rotate(60deg) scale(1.08); opacity:.95; }
+}
+
+.c-news,.c-gol {
+  border-top-color:var(--cemp);
+  background-image:linear-gradient(180deg,var(--tint),transparent 140px);
+}
+.news-item { box-shadow:0 1px 0 rgba(0,0,0,.02); }
+.news-button { background-image:linear-gradient(135deg,var(--btn),var(--oscuro)); }
+.news-button:focus-visible,
+#efemerides .controlesSemana button:focus-visible,
+#efemerides #botonDatoCurioso:focus-visible {
+  outline:3px solid var(--cemp);
+  outline-offset:3px;
+}
+
+.staff-card .photo-placeholder { transition:box-shadow var(--med) var(--ease-out),transform var(--med) var(--ease-out); }
+@media (hover:hover) and (pointer:fine) {
+  .staff-card:hover .photo-placeholder { box-shadow:0 0 0 5px rgba(232,135,30,.22); transform:scale(1.04); }
+}
+
+/* Marco del póster */
+.poster a {
+  position:relative;
+  box-shadow:inset 0 0 0 3px var(--card),inset 0 0 0 4px var(--oro-suave);
+  transition:box-shadow var(--med) var(--ease-out);
+}
+.poster a:hover { box-shadow:inset 0 0 0 3px var(--card),inset 0 0 0 4px var(--cemp); }
+.poster-caption { text-wrap:balance; }
+
+/* Accesos adicionales (carpetas): tira de papel picado */
+.orange-folder,.blue-folder,.neutral-folder,.red-folder {
+  position:relative;
+  overflow:hidden;
+}
+.orange-folder::before,.blue-folder::before,.red-folder::before,.neutral-folder::before {
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height:6px;
+  pointer-events:none;
+  background:var(--picado-w) repeat-x 0 0 / auto 6px;
+  transform:scaleY(-1);
+  transition:background-position 1.2s var(--ease-out);
+}
+.neutral-folder::before { opacity:.9; filter:none; }
+.orange-folder:hover::before,.blue-folder:hover::before,.red-folder:hover::before,.neutral-folder:hover::before { background-position:24px 0; }
+.acc a:focus-visible {
+  outline:3px solid var(--oro);
+  outline-offset:3px;
+}
+
+/* ---------- Animaciones de entrada más suaves ---------- */
+@keyframes enter-rise {
+  from {
+    opacity:0;
+    transform:translate3d(var(--dx,0px),var(--dy,16px),0) scale(.985);
+  }
+  to {
+    opacity:1;
+    transform:none;
+  }
+}
+.c-efem { --i:2; }
+
+/* ---------- EFEMÉRIDES SEMANALES ---------- */
+#efemerides { padding-bottom:1.5rem; }
+
+#tituloEfemerides {
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin:0 0 .85rem;
+  padding:0 2.4rem .85rem 0;
+  font-size:1.05rem;
+  font-weight:700;
+  line-height:1.3;
+  letter-spacing:.02em;
+  color:var(--title);
+  background:
+    linear-gradient(var(--line),var(--line)) left bottom / 100% 1px no-repeat,
+    var(--picado-ct) left bottom / auto 6px repeat-x;
+}
+#tituloEfemerides::before {
+  content:"";
+  flex:none;
+  width:4px;
+  align-self:stretch;
+  border-radius:2px;
+  background:linear-gradient(180deg,var(--cemp),var(--morado));
+}
+#efemerides::after { top:1.05rem; right:1.1rem; z-index:2; transition:transform .7s var(--ease-out); }
+@media (hover:hover) and (pointer:fine) {
+  #efemerides:hover::after { transform:rotate(60deg) scale(1.08); }
+}
+
+#contenidoSemanalEfemerides { z-index:1; }
+
+#vistaSemanalEfemeride,
+#vistaSemanalEfemeride.animando {
+  position:relative;
+  overflow:hidden;
+  min-height:300px;
+  padding:1.05rem .95rem 1.1rem;
+  background:var(--card2);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  animation:ef-fade .4s var(--ease-out) both;
+}
+#vistaSemanalEfemeride::before {
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height:6px;
+  background:var(--picado-ct) repeat-x 0 0 / auto 6px;
+  transform:scaleY(-1);
+  pointer-events:none;
+}
+/* barra fina que indica el avance hacia el siguiente cambio automático (20 s) */
+#vistaSemanalEfemeride::after {
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--cemp),var(--oro));
+  transform:scaleX(0);
+  transform-origin:0 50%;
+  opacity:.75;
+  pointer-events:none;
+}
+#vistaSemanalEfemeride.animando::after { animation:ef-progress 20s linear forwards; }
+
+#vistaSemanalEfemeride[data-dir=atras] { --ef-dx:-18px; }
+
+#vistaSemanalEfemeride > :not(.datoCurioso) {
+  animation:ef-in .6s var(--ease-out) both;
+  animation-delay:calc(var(--k,0) * 70ms);
+}
+#vistaSemanalEfemeride > :nth-child(1) { --k:0; }
+#vistaSemanalEfemeride > :nth-child(2) { --k:1; }
+#vistaSemanalEfemeride > :nth-child(3) { --k:2; }
+#vistaSemanalEfemeride > :nth-child(4) { --k:3; }
+#vistaSemanalEfemeride > :nth-child(5) { --k:4; }
+
+#vistaSemanalEfemeride .fechaEfemeride {
+  display:inline-block;
+  margin:0 0 .15rem;
+  padding:.18rem .7rem;
+  border-radius:999px;
+  background:rgba(232,135,30,.16);
+  color:var(--terra);
+  font-size:.82rem;
+  letter-spacing:.02em;
+  opacity:1;
+}
+[data-theme=dark] #vistaSemanalEfemeride .fechaEfemeride { color:#f4b266; background:rgba(232,135,30,.2); }
+
+#vistaSemanalEfemeride h4 {
+  margin:.55rem 0 .7rem;
+  font-size:1.05rem;
+  line-height:1.3;
+  color:var(--title);
+  text-wrap:balance;
+}
+
+#vistaSemanalEfemeride .imagenEfemeride {
+  width:100%;
+  max-width:none;
+  height:clamp(150px,19vw,210px);
+  margin:.2rem auto 1rem;
+  padding:6px;
+  object-fit:contain;
+  background:var(--card);
+  border-radius:10px;
+  box-shadow:0 0 0 3px var(--card2),0 0 0 4px var(--oro-suave),var(--sh);
+}
+
+#vistaSemanalEfemeride > p:not(.fechaEfemeride) { margin:.2rem 0 .2rem; }
+
+#vistaSemanalEfemeride .datoCurioso {
+  border-left:4px solid var(--cemp);
+  background:var(--tint);
+  animation:dato-in .45s var(--ease-out) both;
+}
+#vistaSemanalEfemeride .datoCurioso[hidden] { display:none; }
+#vistaSemanalEfemeride .datoCurioso p { margin:0; }
+
+#efemerides .controlesSemana { gap:16px; margin-top:1.1rem; }
+
+#efemerides .controlesSemana button,
+#efemerides #botonDatoCurioso {
+  background-image:linear-gradient(135deg,#0a86cc,#0765a3);
+  background-color:#0879bd;
+  box-shadow:0 2px 6px rgba(0,50,100,.25);
+  transition:transform .25s var(--ease-out),box-shadow .25s var(--ease-out),filter .2s var(--ease);
+}
+#efemerides .controlesSemana button {
+  display:grid;
+  place-items:center;
+  width:42px; height:42px;
+  padding:0;
+  border-radius:50%;
+}
+#efemerides .controlesSemana button:hover,
+#efemerides #botonDatoCurioso:hover {
+  background-color:#005b92;
+  filter:brightness(1.08);
+  box-shadow:0 6px 14px -4px rgba(0,60,120,.45);
+}
+#efemerides #anteriorEfemeride:hover { transform:translateX(-2px) scale(1.06); }
+#efemerides #siguienteEfemeride:hover { transform:translateX(2px) scale(1.06); }
+#efemerides .controlesSemana button:active,
+#efemerides #botonDatoCurioso:active { transform:scale(.96); }
+
+#efemerides #botonDatoCurioso { margin-top:.8rem; }
+
+#contadorEfemerides {
+  min-width:4.2rem;
+  padding:.3rem .8rem;
+  text-align:center;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--card2);
+  color:var(--title);
+}
+
+@keyframes ef-fade { from { opacity:.0; } to { opacity:1; } }
+@keyframes ef-in {
+  from { opacity:0; transform:translate3d(var(--ef-dx,18px),0,0); }
+  to { opacity:1; transform:none; }
+}
+@keyframes dato-in {
+  from { opacity:0; transform:translateY(8px) scale(.98); }
+  to { opacity:1; transform:none; }
+}
+@keyframes ef-progress { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+
+/* ---------- Responsivo ---------- */
+@media (max-width:600px) {
+  .card::before { width:46px; height:46px; }
+  .c-notes::before,.c-ext::before { width:52px; height:52px; }
+  #vistaSemanalEfemeride,
+  #vistaSemanalEfemeride.animando { padding:.95rem .8rem 1rem; }
+  .top::before { height:12px; }
+}
+
+/* ---------- Movimiento reducido: sin animaciones ni transiciones ---------- */
+@media (prefers-reduced-motion:reduce) {
+  .top::before,.card::before,
+  #vistaSemanalEfemeride,
+  #vistaSemanalEfemeride > *,
+  #vistaSemanalEfemeride.animando::after,
+  #vistaSemanalEfemeride .datoCurioso { animation:none !important; }
+  .card:hover,.card:hover .ct::after,#efemerides:hover::after { transform:none !important; }
+}
+:root {
+  --enter-dur:.85s;
+  --step:80ms;
+  --ease-nat:cubic-bezier(.22,1,.36,1);
+  --ease-spring:cubic-bezier(.34,1.3,.64,1);
+}
+:root[data-theme] {
+  --web:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(76 76) scale(1.0)'%3E%3Cg fill='%23e8871e'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23f5b83d'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Cg transform='translate(48 90) scale(0.55)'%3E%3Cg fill='%23f09a2c'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23ffd36b'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Cg transform='translate(92 46) scale(0.5)'%3E%3Cg fill='%23e8871e'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23f5b83d'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Ccircle cx='62' cy='62' r='2.2' fill='%238a4fc0'/%3E%3Ccircle cx='88' cy='88' r='0' fill='none'/%3E%3C/svg%3E");
+  --web-l:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg transform='translate(100 0) scale(-1 1)'%3E%3Cg transform='translate(76 76) scale(1.0)'%3E%3Cg fill='%23e8871e'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23f5b83d'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Cg transform='translate(48 90) scale(0.55)'%3E%3Cg fill='%23f09a2c'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23ffd36b'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Cg transform='translate(92 46) scale(0.5)'%3E%3Cg fill='%23e8871e'%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(0)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(30)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(90)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(120)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(180)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(210)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(270)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(300)'/%3E%3Cellipse cx='0' cy='-9' rx='3.6' ry='8' transform='rotate(330)'/%3E%3C/g%3E%3Cg fill='%23f5b83d'%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(15)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(105)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(150)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(195)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(240)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(285)'/%3E%3Cellipse cx='0' cy='-5' rx='2.6' ry='5.5' transform='rotate(330)'/%3E%3C/g%3E%3Ccircle r='3' fill='%237a3a0c'/%3E%3C/g%3E%3Ccircle cx='62' cy='62' r='2.2' fill='%238a4fc0'/%3E%3Ccircle cx='88' cy='88' r='0' fill='none'/%3E%3C/g%3E%3C/svg%3E");
+  --dm-glow:rgba(232,135,30,.55);
+}
+html::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(520px 360px at 10% 6%,rgba(232,135,30,.12),transparent 70%),
+    radial-gradient(640px 430px at 94% 96%,rgba(201,162,39,.10),transparent 70%),
+    radial-gradient(460px 330px at 80% 22%,rgba(122,63,168,.08),transparent 70%);
+  animation:dm-veladora 11s ease-in-out infinite;
+}
+body::before,body::after {
+  content:"";
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:200vh;
+  z-index:1;
+  pointer-events:none;
+  background-repeat:repeat-y;
+  background-size:100% 100vh;
+}
+body::before {
+  background-image:radial-gradient(ellipse 5px 9px at 7% 10%,rgba(240,150,40,.85) 58%,transparent 64%),radial-gradient(ellipse 8px 5px at 19% 38%,rgba(250,190,60,.8) 58%,transparent 64%),radial-gradient(ellipse 5px 8px at 31% 72%,rgba(240,150,40,.85) 58%,transparent 64%),radial-gradient(ellipse 6px 9px at 44% 22%,rgba(250,190,60,.8) 58%,transparent 64%),radial-gradient(ellipse 9px 5px at 57% 55%,rgba(240,150,40,.85) 58%,transparent 64%),radial-gradient(ellipse 5px 8px at 66% 86%,rgba(150,95,200,.55) 58%,transparent 64%),radial-gradient(ellipse 6px 9px at 78% 30%,rgba(240,150,40,.85) 58%,transparent 64%),radial-gradient(ellipse 8px 5px at 88% 64%,rgba(250,190,60,.8) 58%,transparent 64%),radial-gradient(ellipse 5px 8px at 95% 12%,rgba(240,150,40,.85) 58%,transparent 64%);
+  opacity:.5;
+  animation:dm-caida 52s linear infinite,dm-vaiven 8.5s ease-in-out infinite alternate;
+}
+body::after {
+  background-image:radial-gradient(circle 5px at 12% 20%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 4px at 26% 64%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 5px at 38% 34%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 4px at 51% 82%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 5px at 63% 14%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 4px at 72% 52%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 5px at 84% 76%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%),radial-gradient(circle 4px at 92% 28%,rgba(255,226,150,.95) 0 28%,rgba(255,184,70,.38) 54%,transparent 74%);
+  opacity:.55;
+  animation:dm-ascenso 70s linear infinite,dm-vaiven-b 13s ease-in-out infinite alternate;
+}
+:root[data-theme=dark] body::before { opacity:.7; }
+:root[data-theme=dark] body::after { opacity:.8; }
+@keyframes dm-caida {
+  from { transform:translate3d(0,-100vh,0); }
+  to { transform:translate3d(0,0,0); }
+}
+@keyframes dm-ascenso {
+  from { transform:translate3d(0,0,0); }
+  to { transform:translate3d(0,-100vh,0); }
+}
+@keyframes dm-vaiven {
+  from { translate:-24px 0; }
+  to { translate:28px 0; }
+}
+@keyframes dm-vaiven-b {
+  from { translate:18px 0; }
+  to { translate:-22px 0; }
+}
+@keyframes dm-veladora {
+  0% { opacity:.8; }
+  14% { opacity:.95; }
+  31% { opacity:.84; }
+  47% { opacity:1; }
+  63% { opacity:.88; }
+  82% { opacity:.97; }
+  100% { opacity:.8; }
+}
+@keyframes picado-drift {
+  0% { background-position:0 0; }
+  22% { background-position:7px 0; }
+  41% { background-position:3px 0; }
+  68% { background-position:12px 0; }
+  86% { background-position:5px 0; }
+  100% { background-position:0 0; }
+}
+.top::before { animation:picado-drift 19s ease-in-out infinite; }
+@keyframes web-sway {
+  0% { transform:rotate(0deg) scale(1); }
+  38% { transform:rotate(2.4deg) scale(1.03); }
+  71% { transform:rotate(-1.2deg) scale(1.012); }
+  100% { transform:rotate(0deg) scale(1); }
+}
+.card::before {
+  opacity:.9;
+  animation:web-sway 11s ease-in-out infinite;
+  transition:filter .6s var(--ease-nat),opacity .6s var(--ease-nat);
+}
+.c-links::before { animation-duration:10s; animation-delay:-2s; }
+.c-news::before { animation-duration:12.5s; animation-delay:-5s; }
+.c-efem::before { animation-duration:9.5s; animation-delay:-7s; }
+.c-eng::before { animation-duration:13s; animation-delay:-3s; }
+.c-ext::before { animation-duration:11.5s; animation-delay:-8s; }
+.c-mant::before { animation-duration:14s; animation-delay:-1s; }
+.c-gol::before { animation-duration:10.5s; animation-delay:-6s; }
+.c-notes::before { animation-duration:12s; animation-delay:-4s; }
+.card {
+  transition:transform .6s var(--ease-nat),box-shadow .6s var(--ease-nat),border-color .35s var(--ease);
+}
+.orange-folder,.blue-folder,.neutral-folder,.red-folder {
+  padding:.9rem .7rem;
+  font-size:clamp(.88rem,1.12vw,1.12rem);
+  letter-spacing:.01em;
+  transition:transform .6s var(--ease-spring),box-shadow .55s var(--ease-nat),filter .35s var(--ease),background-color .25s var(--ease);
+}
+.staff-card,.news-button {
+  transition:transform .6s var(--ease-spring),border-color .3s var(--ease),box-shadow .55s var(--ease-nat),filter .3s var(--ease);
+}
+@media (hover:hover) and (pointer:fine) {
+  .card:hover {
+    transition-duration:.32s,.32s,.2s;
+    box-shadow:var(--sh-h),0 10px 30px rgba(232,135,30,.16);
+  }
+  .card:hover::before {
+    opacity:1;
+    filter:drop-shadow(0 0 7px var(--dm-glow));
+  }
+  .orange-folder:hover,.blue-folder:hover,.neutral-folder:hover,.red-folder:hover,.staff-card:hover,.news-button:hover {
+    transition-duration:.34s,.3s,.2s,.2s;
+  }
+}
+@media (prefers-reduced-motion:no-preference) {
+  .rise { animation-timing-function:var(--ease-nat); }
+}
+@keyframes enter-rise {
+  0% { opacity:0; transform:translate3d(var(--dx,0px),var(--dy,18px),0) scale(.985); }
+  60% { opacity:1; }
+  100% { opacity:1; transform:none; }
+}
+@keyframes ef-in {
+  from { opacity:0; transform:translate3d(var(--ef-dx,14px),6px,0); }
+  to { opacity:1; transform:none; }
+}
+@keyframes dato-in {
+  from { opacity:0; transform:translateY(10px) scale(.985); }
+  to { opacity:1; transform:none; }
+}
+#vistaSemanalEfemeride > :not(.datoCurioso) {
+  animation:ef-in .8s var(--ease-nat) both;
+  animation-delay:calc(var(--k,0) * 85ms);
+}
+#vistaSemanalEfemeride .datoCurioso { animation:dato-in .6s var(--ease-nat) both; }
+input:focus-visible,textarea:focus-visible,select:focus-visible {
+  border-color:var(--cemp);
+  box-shadow:0 0 0 3px rgba(232,135,30,.28);
+  transition:box-shadow .25s var(--ease),border-color .25s var(--ease);
+}
+@media (max-width:600px) {
+  body::after { display:none; }
+  body::before { opacity:.4; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html::before,.card::before,.top::before { animation:none !important; }
+  body::before,body::after { display:none; }
+}
+</style>
+</head>
+
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+  <symbol id="i-link" viewBox="0 0 24 24">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+  </symbol>
+  <symbol id="i-news" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+  </symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24">
+    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+    <path d="M12 9v4M12 17h.01"/>
+  </symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24">
+    <path d="M12 20h9"/>
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+  </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="5"/>
+    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </symbol>
+</defs>
+</svg>
+
+<header class="top">
+  <img alt="Hospital San Ángel Inn Chapultepec" src="./logo-image.jpg" onerror="this.style.display='none'">
+
+  <div class="theme" role="group" aria-label="Tema de apariencia">
+    <button type="button" data-theme-set="light" aria-label="Tema claro" title="Claro">
+      <svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg>
+      <span>Claro</span>
+    </button>
+    <button type="button" data-theme-set="dark" aria-label="Tema oscuro" title="Oscuro">
+      <svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg>
+      <span>Oscuro</span>
+    </button>
+  </div>
+</header>
+
+<h1 class="sr">Portal Web - Hospital Chapultepec</h1>
+
+<div class="layout">
+
+  <aside class="side">
+
+    <section class="card rise c-links">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-link"/></svg>
+        Enlaces Rapidos
+      </h2>
+      <div id="quickLinksList"></div>
+    </section>
+
+    <section class="card rise c-news">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-news"/></svg>
+        Noticias
+      </h2>
+
+      <article class="news-item">
+        <h3 class="news-title">Concurso de Disfraces</h3>
+
+        <p>
+          Invitamos a todo el personal a participar en el
+          Concurso de Disfraces del Hospital San Angel Inn
+          Chapultepec.
+        </p>
+
+        <p>
+          Recuerda registrarte en el formulario oficial para
+          confirmar tu participación.
+        </p>
+
+        <a
+          class="news-button"
+          href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=_W_eOysNq0upPTIhb08iifBB19Ls-jpDulqiAQ016pdUNzZLRzI5WVpDM040SUtIMFQ5UkJHREVQMS4u&origin=QRCode&route=shorturl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Registrarme al concurso
+        </a>
+      </article>
+    </section>
+
+    <section class="card rise c-efem" id="efemerides">
+  <h3 id="tituloEfemerides">EFEMÉRIDES DE LA SEMANA</h3>
+
+  <div id="contenidoSemanalEfemerides">
+    <div id="vistaSemanalEfemeride"></div>
+
+    <div class="controlesSemana">
+      <button type="button" id="anteriorEfemeride" aria-label="Efeméride anterior">←</button>
+      <span id="contadorEfemerides" aria-live="polite">1 de 7</span>
+      <button type="button" id="siguienteEfemeride" aria-label="Siguiente efeméride">➜</button>
+    </div>
+
+    </div>
+</section>
+
+    <section class="card rise c-eng">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg>
+        Habla Ingles
+      </h2>
+      <div class="english-vertical" id="staffList"></div>
+    </section>
+
+    
+
+    
+
+    
+
+  </aside>
+
+  <main class="main">
+
+    <section class="card rise c-ext">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>
+        Extensiones Telefonicas
+      </h2>
+
+      <input
+        class="field search"
+        id="searchInput"
+        type="search"
+        oninput="filterExtensions()"
+        aria-label="Buscar contacto"
+        placeholder="Buscar contacto..."
+      >
+
+      <div class="tw" tabindex="0" role="region" aria-label="Tabla de extensiones telefónicas">
+        <table id="extensionsTable">
+          <thead>
+            <tr>
+              <th scope="col">Contacto</th>
+              <th scope="col">Ext</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="2">Cargando extensiones...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="empty" id="noResults" role="status" hidden>Sin resultados</p>
+    </section>
+
+    <section class="card rise c-mant">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-tool"/></svg>
+        Mantenimiento Equipo Medico
+      </h2>
+      <ol class="vl" id="maintenanceList"></ol>
+    </section>
+
+    <section class="card rise c-gol" aria-label="Programa Golondrinos">
+      <div class="poster">
+        <a
+          id="golondrinosLink"
+          href="./img.png"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir imagen actual"
+        >
+          <img
+            alt="Programa Golondrinos"
+            class="poster-img"
+            id="golondrinosImage"
+            src="./img.png"
+          >
+        </a>
+
+        <p class="poster-caption" id="golondrinosCaption">¡Sumemos juntos a nuestra ofrenda de Dí­a de Muertos!</p>
+
+        <p class="poster-sub" id="golondrinosSub">En HSAIC queremos crear una ofrenda llena de tradición, color y cariño en Burdeos. Invitamos a nuestros colaboradores a sumarse voluntariamente con algún detalle para decorarla. Puedes aportar flor de cempasúchil, papel picado, adornos alusivos al Día de Muertos u otros detalles decorativos. Entrega tus aportaciones en la Coordinación de Capacitación y Desarrollo con la Lic. Vianey Obregón. ¡Cada detalle cuenta! Gracias por compartir con nosotros el cariño por nuestras tradiciones.</p>
+      </div>
+    </section>
+
+    <section class="card rise c-notes">
+      <h2 class="ct">
+        <svg class="ic" aria-hidden="true"><use href="#i-edit"/></svg>
+        Bloc de Notas
+      </h2>
+      <textarea
+        class="field notepad"
+        id="notepad"
+        aria-label="Bloc de notas"
+        placeholder="Notas rapidas..."
+      ></textarea>
+    </section>
+
+    
+
+    <nav class="acc right-column" aria-label="Accesos adicionales"></nav>
+
+  </main>
+</div>
+
+<script>
+'use strict';
+const PORTAL_DATA = JSON.parse(decodeURIComponent(escape(atob("ewogICJlbmxhY2VzIjogeyJ2YWx1ZSI6W3sibmFtZSI6IkludHJhbWVkIC0gSCBDaGFwdWx0ZXBlYyIsInVybCI6Imh0dHBzOi8vaHNhaS5pbnRyYW1lZC5teC9oLWNoYXB1bHRlcGVjLyJ9LHsibmFtZSI6IkppcmEgU2VydmljZXMiLCJ1cmwiOiJodHRwczovL2hzYWkuYXRsYXNzaWFuLm5ldC9zZXJ2aWNlZGVzay9jdXN0b21lci9wb3J0YWxzIn0seyJuYW1lIjoiRWRlbm1lZCIsInVybCI6Imh0dHBzOi8vYXBwcy5ldmFjZW50ZXIuY29tL2xvZ2luIn0seyJuYW1lIjoiR01RIFFVQUxJVEFTIiwidXJsIjoiaHR0cHM6Ly9nYXN0b3NtZWRpY29zLnF1YWxpdGFzLmNvbS5teC9nbXEtZnJvbnRlbmQvZ21xLXF1YWxpdGFzLWZyb250ZW5kLyMvbG9naW4ifV0sIkNvdW50Ijo0fSwKICAibWFudGVuaW1pZW50byI6IHsidmFsdWUiOlt7Im5hbWUiOiJDRXlFIHkgU1VCIENFeUUiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRkNFeUUlMjB5JTIwU1VCJTIwQ0V5RVx1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJIZW1vZGluYW1pYSIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGRGlyZWNjaSVDMyVCM24lMjBkZSUyMEluZnJhZXN0cnVjdHVyYSUyMHklMjBTZXJ2aWNpb3MlMkZKZWZhdHVyYSUyMGRlJTIwQmlvbWVkaWNhJTJGMSUyRSUyME9SREVORVMlMjBERSUyMFNFUlZJQ0lPJTJGSGVtb2RpbmFtaWFcdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiSG9zcGl0YWxpemFjacOzbiIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGRGlyZWNjaSVDMyVCM24lMjBkZSUyMEluZnJhZXN0cnVjdHVyYSUyMHklMjBTZXJ2aWNpb3MlMkZKZWZhdHVyYSUyMGRlJTIwQmlvbWVkaWNhJTJGMSUyRSUyME9SREVORVMlMjBERSUyMFNFUlZJQ0lPJTJGSG9zcGl0YWxpemFjaSVDMyVCM25cdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiSW1hZ2Vub2xvZ8OtYSIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGRGlyZWNjaSVDMyVCM24lMjBkZSUyMEluZnJhZXN0cnVjdHVyYSUyMHklMjBTZXJ2aWNpb3MlMkZKZWZhdHVyYSUyMGRlJTIwQmlvbWVkaWNhJTJGMSUyRSUyME9SREVORVMlMjBERSUyMFNFUlZJQ0lPJTJGSW1hZ2Vub2xvZyVDMyVBRGFcdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiSW5nZW5pZXLDrWEgQmlvbcOpZGljYSIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGRGlyZWNjaSVDMyVCM24lMjBkZSUyMEluZnJhZXN0cnVjdHVyYSUyMHklMjBTZXJ2aWNpb3MlMkZKZWZhdHVyYSUyMGRlJTIwQmlvbWVkaWNhJTJGMSUyRSUyME9SREVORVMlMjBERSUyMFNFUlZJQ0lPJTJGSW5nZW5pZXIlQzMlQURhJTIwQmlvbSVDMyVBOWRpY2FcdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiTGFib3IiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRkxhYm9yXHUwMDI2cD10cnVlXHUwMDI2Z2E9MSJ9LHsibmFtZSI6IkxhYm9yYXRvcmlvIENsw61uaWNvIiwidXJsIjoiaHR0cHM6Ly9ncnVwb2hvc3BpdGFsYXJpby5zaGFyZXBvaW50LmNvbS9zaXRlcy9Ib3NwaXRhbGVzU2FuQW5nZWxJbm4vRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zL0Zvcm1zL0FsbEl0ZW1zLmFzcHg/aWQ9JTJGc2l0ZXMlMkZIb3NwaXRhbGVzU2FuQW5nZWxJbm4lMkZEb2N1bWVudG9zJTIwY29tcGFydGlkb3MlMkZIb3NwaXRhbGVzJTJGQ2hhcHVsdGVwZWMlMkZEaXJlY2NpJUMzJUIzbiUyMGRlJTIwSW5mcmFlc3RydWN0dXJhJTIweSUyMFNlcnZpY2lvcyUyRkplZmF0dXJhJTIwZGUlMjBCaW9tZWRpY2ElMkYxJTJFJTIwT1JERU5FUyUyMERFJTIwU0VSVklDSU8lMkZMYWJvcmF0b3JpbyUyMENsJUMzJUFEbmljb1x1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJRdWlyw7NmYW5vIiwidXJsIjoiaHR0cHM6Ly9ncnVwb2hvc3BpdGFsYXJpby5zaGFyZXBvaW50LmNvbS9zaXRlcy9Ib3NwaXRhbGVzU2FuQW5nZWxJbm4vRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zL0Zvcm1zL0FsbEl0ZW1zLmFzcHg/aWQ9JTJGc2l0ZXMlMkZIb3NwaXRhbGVzU2FuQW5nZWxJbm4lMkZEb2N1bWVudG9zJTIwY29tcGFydGlkb3MlMkZIb3NwaXRhbGVzJTJGQ2hhcHVsdGVwZWMlMkZEaXJlY2NpJUMzJUIzbiUyMGRlJTIwSW5mcmFlc3RydWN0dXJhJTIweSUyMFNlcnZpY2lvcyUyRkplZmF0dXJhJTIwZGUlMjBCaW9tZWRpY2ElMkYxJTJFJTIwT1JERU5FUyUyMERFJTIwU0VSVklDSU8lMkZRdWlyJUMzJUIzZmFub1x1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJUcmFuc2Z1c2nDs24iLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRlRyYW5zZnVzaSVDMyVCM25cdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiVW5pZGFkIGRlIEN1aWRhZG9zIENvcm9uYXJpb3MiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRlVuaWRhZCUyMGRlJTIwQ3VpZGFkb3MlMjBDb3JvbmFyaW9zXHUwMDI2cD10cnVlXHUwMDI2Z2E9MSJ9LHsibmFtZSI6IlVuaWRhZCBkZSBDdWlkYWRvcyBJbnRlbnNpdm9zIiwidXJsIjoiaHR0cHM6Ly9ncnVwb2hvc3BpdGFsYXJpby5zaGFyZXBvaW50LmNvbS9zaXRlcy9Ib3NwaXRhbGVzU2FuQW5nZWxJbm4vRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zL0Zvcm1zL0FsbEl0ZW1zLmFzcHg/aWQ9JTJGc2l0ZXMlMkZIb3NwaXRhbGVzU2FuQW5nZWxJbm4lMkZEb2N1bWVudG9zJTIwY29tcGFydGlkb3MlMkZIb3NwaXRhbGVzJTJGQ2hhcHVsdGVwZWMlMkZEaXJlY2NpJUMzJUIzbiUyMGRlJTIwSW5mcmFlc3RydWN0dXJhJTIweSUyMFNlcnZpY2lvcyUyRkplZmF0dXJhJTIwZGUlMjBCaW9tZWRpY2ElMkYxJTJFJTIwT1JERU5FUyUyMERFJTIwU0VSVklDSU8lMkZVbmlkYWQlMjBkZSUyMEN1aWRhZG9zJTIwSW50ZW5zaXZvc1x1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJVbmlkYWQgZGUgQ3VpZGFkb3MgSW50ZW5zaXZvcyBOZW9uYXRhbGVzIiwidXJsIjoiaHR0cHM6Ly9ncnVwb2hvc3BpdGFsYXJpby5zaGFyZXBvaW50LmNvbS9zaXRlcy9Ib3NwaXRhbGVzU2FuQW5nZWxJbm4vRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zL0Zvcm1zL0FsbEl0ZW1zLmFzcHg/aWQ9JTJGc2l0ZXMlMkZIb3NwaXRhbGVzU2FuQW5nZWxJbm4lMkZEb2N1bWVudG9zJTIwY29tcGFydGlkb3MlMkZIb3NwaXRhbGVzJTJGQ2hhcHVsdGVwZWMlMkZEaXJlY2NpJUMzJUIzbiUyMGRlJTIwSW5mcmFlc3RydWN0dXJhJTIweSUyMFNlcnZpY2lvcyUyRkplZmF0dXJhJTIwZGUlMjBCaW9tZWRpY2ElMkYxJTJFJTIwT1JERU5FUyUyMERFJTIwU0VSVklDSU8lMkZVbmlkYWQlMjBkZSUyMEN1aWRhZG9zJTIwSW50ZW5zaXZvcyUyME5lb25hdGFsZXNcdTAwMjZwPXRydWVcdTAwMjZnYT0xIn0seyJuYW1lIjoiVW5pZGFkIGRlIE1lZGljaW5hIFJlc3BpcmF0b3JpYSIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGRGlyZWNjaSVDMyVCM24lMjBkZSUyMEluZnJhZXN0cnVjdHVyYSUyMHklMjBTZXJ2aWNpb3MlMkZKZWZhdHVyYSUyMGRlJTIwQmlvbWVkaWNhJTJGMSUyRSUyME9SREVORVMlMjBERSUyMFNFUlZJQ0lPJTJGVW5pZGFkJTIwZGUlMjBNZWRpY2luYSUyMFJlc3BpcmF0b3JpYVx1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJVcmdlbmNpYXMiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRlVyZ2VuY2lhc1x1MDAyNnA9dHJ1ZVx1MDAyNmdhPTEifSx7Im5hbWUiOiJDYWxpYnJhY2nDs24gZGUgVGVybcOzbWV0cm9zIHkgVGVybW9oaWdyw7NtZXRyb3MiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRkRpcmVjY2klQzMlQjNuJTIwZGUlMjBJbmZyYWVzdHJ1Y3R1cmElMjB5JTIwU2VydmljaW9zJTJGSmVmYXR1cmElMjBkZSUyMEJpb21lZGljYSUyRjElMkUlMjBPUkRFTkVTJTIwREUlMjBTRVJWSUNJTyUyRkNhbGlicmFjaW9uJTIwZGUlMjBUZXJtb21ldHJvcyUyMHklMjBUZXJtb2hpZ3JvbWV0cm9zXHUwMDI2cD10cnVlXHUwMDI2Z2E9MSJ9XSwiQ291bnQiOjE1fSwKICAiYWNjZXNvcyI6IHsidmFsdWUiOlt7Im5hbWUiOiJDQVJQRVRBIE5BUkFOSkEiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tLzpiOi9zL0hvc3BpdGFsZXNTYW5BbmdlbElubi9JUUJEYWdvbTFGSWlScGhpRXRBT3lXQUZBVWt4NnQyM2ZKdDhWVE44ZDc1M2Ixdz9lPTdOMUxxeCIsImNsYXNzTmFtZSI6Im9yYW5nZS1mb2xkZXIifSx7Im5hbWUiOiJDVUFEUk8gQkFTSUNPIERFIE1FRElDQU1FTlRPUyIsInVybCI6Imh0dHBzOi8vZ3J1cG9ob3NwaXRhbGFyaW8uc2hhcmVwb2ludC5jb20vc2l0ZXMvSG9zcGl0YWxlc1NhbkFuZ2VsSW5uL0RvY3VtZW50b3MlMjBjb21wYXJ0aWRvcy9Gb3Jtcy9BbGxJdGVtcy5hc3B4P2lkPSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGVGVjbm9sb2dpYXMlMjBkZSUyMGxhJTIwSW5mb3JtYWNpb24lMkZQJUMzJUExZ2luYSUyMGRlJTIwSW5pY2lvJTJGQ3VhZHJvJTIwQiVDMyVBMXNpY28lMjBkZSUyME1lZGljYW1lbnRvcyUyME9jdCUyMDIwMjYlMkVwZGZcdTAwMjZwYXJlbnQ9JTJGc2l0ZXMlMkZIb3NwaXRhbGVzU2FuQW5nZWxJbm4lMkZEb2N1bWVudG9zJTIwY29tcGFydGlkb3MlMkZIb3NwaXRhbGVzJTJGQ2hhcHVsdGVwZWMlMkZUZWNub2xvZ2lhcyUyMGRlJTIwbGElMjBJbmZvcm1hY2lvbiUyRlAlQzMlQTFnaW5hJTIwZGUlMjBJbmljaW9cdTAwMjZwPXRydWVcdTAwMjZnYT0xIiwiY2xhc3NOYW1lIjoiYmx1ZS1mb2xkZXIifSx7Im5hbWUiOiJHQUNFVEEgQ0hBUFVMVEVQRUMiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tLzpiOi9zL0hvc3BpdGFsZXNTYW5BbmdlbElubi9JUUJqUzM5V05vWk9RNDFMWXBXX0gzVUNBY3YyUEUzY2FJNjBRYXp0RS1QUEJQST9lPWlnRkNwaiIsImNsYXNzTmFtZSI6Im5ldXRyYWwtZm9sZGVyIn0seyJuYW1lIjoiR1VJQSBDQUhVU0EiLCJ1cmwiOiJodHRwczovL2dydXBvaG9zcGl0YWxhcmlvLnNoYXJlcG9pbnQuY29tL3NpdGVzL0hvc3BpdGFsZXNTYW5BbmdlbElubi9Eb2N1bWVudG9zJTIwY29tcGFydGlkb3MvRm9ybXMvQWxsSXRlbXMuYXNweD9pZD0lMkZzaXRlcyUyRkhvc3BpdGFsZXNTYW5BbmdlbElubiUyRkRvY3VtZW50b3MlMjBjb21wYXJ0aWRvcyUyRkhvc3BpdGFsZXMlMkZDaGFwdWx0ZXBlYyUyRlRlY25vbG9naWFzJTIwZGUlMjBsYSUyMEluZm9ybWFjaW9uJTJGUCVDMyVBMWdpbmElMjBkZSUyMEluaWNpbyUyRklORk9HUkFGSUFTJTVGQ0FIVVNBJTJFcGRmXHUwMDI2cGFyZW50PSUyRnNpdGVzJTJGSG9zcGl0YWxlc1NhbkFuZ2VsSW5uJTJGRG9jdW1lbnRvcyUyMGNvbXBhcnRpZG9zJTJGSG9zcGl0YWxlcyUyRkNoYXB1bHRlcGVjJTJGVGVjbm9sb2dpYXMlMjBkZSUyMGxhJTIwSW5mb3JtYWNpb24lMkZQJUMzJUExZ2luYSUyMGRlJTIwSW5pY2lvXHUwMDI2cD10cnVlXHUwMDI2Y3Q9MTc5MjcwMTU3NDk1OVx1MDAyNm9yPVRlYW1zJTJESExcdTAwMjZnYT0xXHUwMDI2TE9GPTEiLCJjbGFzc05hbWUiOiJyZWQtZm9sZGVyIn1dLCJDb3VudCI6NH0sCiAgInBlcnNvbmFsIjogeyJ2YWx1ZSI6W3siaW5pdGlhbCI6IkIiLCJuYW1lIjoiQmVhdHJpeiBFbGVuYSBDYW5vIEZhbm8iLCJhcmVhIjoiRGlyZWNjacOzbiBNw6lkaWNhIC8gTWl4dG8ifSx7ImluaXRpYWwiOiJMIiwibmFtZSI6Ikx1aXMgQWxiZXJ0byBFc2PDoXJjZWdhIFJpbmPDs24iLCJhcmVhIjoiSW1hZ2Vub2xvZ8OtYSAvIE1hdHV0aW5vIn0seyJpbml0aWFsIjoiSyIsIm5hbWUiOiJLYXJpbmEgT3J0ZWdhIEhlcm5hbmRleiIsImFyZWEiOiJSZWxhY2lvbmVzIFDDumJsaWNhcyAvIE1peHRvIn1dLCJDb3VudCI6M30sCiAgImV4dGVuc2lvbmVzIjogeyJ2YWx1ZSI6W3siY29udGFjdCI6IkFjY2VzbyBCdXJkZW9zIiwiZXh0ZW5zaW9uIjoiMzE5MTAifSx7ImNvbnRhY3QiOiJBY3JvcG9sw61zIEFjcm9wb2zDrXMiLCJleHRlbnNpb24iOiIzMTA4NCJ9LHsiY29udGFjdCI6IkFkYW4gUmluY8OzbiBTYW5kb3ZhbCIsImV4dGVuc2lvbiI6IjMxMDU4In0seyJjb250YWN0IjoiQWRtaXNpb24gMiIsImV4dGVuc2lvbiI6IjMxMDExIn0seyJjb250YWN0IjoiQWRtaXNpb24gVXJnZW5jaWFzIiwiZXh0ZW5zaW9uIjoiMzEwMTgifSx7ImNvbnRhY3QiOiJBbG1hIFJvY2lvIFBhbmlhZ3VhIFJvZHLDrWd1ZXoiLCJleHRlbnNpb24iOiIzMTA0NSJ9LHsiY29udGFjdCI6IkFtcGFybyBQw6lyZXogQW5kcsOpcyBMdWNpbyIsImV4dGVuc2lvbiI6IjMxMDc4In0seyJjb250YWN0IjoiQW5hbGlzdGEgZGUgY29tcHJhcyBNZWRpY2FtZW50b3MiLCJleHRlbnNpb24iOiIzMTAzMCJ9LHsiY29udGFjdCI6IkFuYWxpc3RhIGRlIGNvbXByYXMgVmlzdGFzIiwiZXh0ZW5zaW9uIjoiMzEwNDYifSx7ImNvbnRhY3QiOiJBbmFsaXN0YSBkZSBjb21wcmFzIE1hdGVyaWFsZXMiLCJleHRlbnNpb24iOiIzMTA0NyJ9LHsiY29udGFjdCI6IkFuYWxpc3RhIENhamEgRmFjdHVyYWNpbyBZb2F0emluIiwiZXh0ZW5zaW9uIjoiMzEwMzgifSx7ImNvbnRhY3QiOiJBbmFsaXN0YSBDYWphIEZhY3R1cmFjaW9uIE5pY29sYXMgTHVnbyIsImV4dGVuc2lvbiI6IjMxMDM5In0seyJjb250YWN0IjoiQW5hbGlzdGFzIGRlIE1lc2EgZGUgQ29udHJvbCBPcGVyYWNpb25lcyIsImV4dGVuc2lvbiI6IjMxMDE2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwMSIsImV4dGVuc2lvbiI6IjMxMjIxIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwMyIsImV4dGVuc2lvbiI6IjMxMjIzIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwNCIsImV4dGVuc2lvbiI6IjMxMjI0In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwNSIsImV4dGVuc2lvbiI6IjMxMjI1In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwNiIsImV4dGVuc2lvbiI6IjMxMjI2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwNyIsImV4dGVuc2lvbiI6IjMxMjI3In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwOCIsImV4dGVuc2lvbiI6IjMxMjI4In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDEwOSIsImV4dGVuc2lvbiI6IjMxMjI5In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDExMCIsImV4dGVuc2lvbiI6IjMxMjMwIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwMSIsImV4dGVuc2lvbiI6IjMxMzIxIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwMiIsImV4dGVuc2lvbiI6IjMxMzIyIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwMyIsImV4dGVuc2lvbiI6IjMxMzIzIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwNCIsImV4dGVuc2lvbiI6IjMxMzI0In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwNSIsImV4dGVuc2lvbiI6IjMxMzI1In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwNiIsImV4dGVuc2lvbiI6IjMxMzI2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwNyIsImV4dGVuc2lvbiI6IjMxMzI3In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwOCIsImV4dGVuc2lvbiI6IjMxMzI4In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIwOSIsImV4dGVuc2lvbiI6IjMxMzI5In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDIxMCIsImV4dGVuc2lvbiI6IjMxMzMwIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwMSIsImV4dGVuc2lvbiI6IjMxNDIxIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwMiIsImV4dGVuc2lvbiI6IjMxNDIyIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwMyIsImV4dGVuc2lvbiI6IjMxNDIzIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwNCIsImV4dGVuc2lvbiI6IjMxNDI0In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwNSIsImV4dGVuc2lvbiI6IjMxNDI1In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwNiIsImV4dGVuc2lvbiI6IjMxNDI2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwNyIsImV4dGVuc2lvbiI6IjMxNDI3In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwOCIsImV4dGVuc2lvbiI6IjMxNDI4In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMwOSIsImV4dGVuc2lvbiI6IjMxNDI5In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDMxMCIsImV4dGVuc2lvbiI6IjMxNDMwIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwMSIsImV4dGVuc2lvbiI6IjMxNTIxIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwMiIsImV4dGVuc2lvbiI6IjMxNTIyIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwMyIsImV4dGVuc2lvbiI6IjMxNTIzIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwNCIsImV4dGVuc2lvbiI6IjMxNTI0In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwNSIsImV4dGVuc2lvbiI6IjMxNTI1In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwNiIsImV4dGVuc2lvbiI6IjMxNTI2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwNyIsImV4dGVuc2lvbiI6IjMxNTI3In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwOCIsImV4dGVuc2lvbiI6IjMxNTI4In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQwOSIsImV4dGVuc2lvbiI6IjMxNTI5In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDQxMCIsImV4dGVuc2lvbiI6IjMxNTMwIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwMSIsImV4dGVuc2lvbiI6IjMxNjIxIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwMiIsImV4dGVuc2lvbiI6IjMxNjIyIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwMyIsImV4dGVuc2lvbiI6IjMxNjIzIn0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwNCIsImV4dGVuc2lvbiI6IjMxNjI0In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwNSIsImV4dGVuc2lvbiI6IjMxNjI1In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwNiIsImV4dGVuc2lvbiI6IjMxNjI2In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwNyIsImV4dGVuc2lvbiI6IjMxNjI3In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwOCIsImV4dGVuc2lvbiI6IjMxNjI4In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUwOSIsImV4dGVuc2lvbiI6IjMxNjI5In0seyJjb250YWN0IjoiQXNpc3RlbnRlIDUxMCIsImV4dGVuc2lvbiI6IjMxNjMwIn0seyJjb250YWN0IjoiQXV4aWxpYXIgZGUgYXJjaGl2byBjbGluaWNvIiwiZXh0ZW5zaW9uIjoiMzEwNjUifSx7ImNvbnRhY3QiOiJCZWF0cml6IEFkcmlhbmEgR2FyY8OtYSBBbHZhcmFkbyIsImV4dGVuc2lvbiI6IjMxMDM1In0seyJjb250YWN0IjoiQy5QLiBBbmFoaSBGb25zZWNhIEJldGFuY291cnQiLCJleHRlbnNpb24iOiIzMTA1NiJ9LHsiY29udGFjdCI6IkNPRSBBdWRpdG9yaW8iLCJleHRlbnNpb24iOiIzMTA5MiJ9LHsiY29udGFjdCI6IkNhamEgR2VuZXJhbCIsImV4dGVuc2lvbiI6IjMxMDEwIn0seyJjb250YWN0IjoiQ2VudHJhbCBMYWJvciIsImV4dGVuc2lvbiI6IjMxMDkwIn0seyJjb250YWN0IjoiQ2VudHJhbCBVcmdlbmNpYXMiLCJleHRlbnNpb24iOiIzMTAwNSJ9LHsiY29udGFjdCI6IkNlbnRyYWwgZGUgRW5mZXJtZXLDrWEgMiIsImV4dGVuc2lvbiI6IjMxMTAyIn0seyJjb250YWN0IjoiQ2VudHJhbCBkZSBFbmZlcm1lcsOtYSAzIiwiZXh0ZW5zaW9uIjoiMzExMDMifSx7ImNvbnRhY3QiOiJDZW50cmFsIGRlIEVuZmVybWVyw61hIDQiLCJleHRlbnNpb24iOiIzMTEwNCJ9LHsiY29udGFjdCI6IkNleWUgUXVpcm9mYW5vIiwiZXh0ZW5zaW9uIjoiMzEwMjIifSx7ImNvbnRhY3QiOiJDbGluaWNhIGRlIENhdGV0ZXJlcyIsImV4dGVuc2lvbiI6IjMxMDg4In0seyJjb250YWN0IjoiQ2x1YiBNZWRpY29zIiwiZXh0ZW5zaW9uIjoiMzE3MDEifSx7ImNvbnRhY3QiOiJDb25tdXRhZG9yIFJlY2VwY2nDs24gMSIsImV4dGVuc2lvbiI6IjMxMDAwIn0seyJjb250YWN0IjoiQ29ubXV0YWRvciBSZWNlcGNpw7NuIDIiLCJleHRlbnNpb24iOiIzMTE5NiJ9LHsiY29udGFjdCI6IkNvbm11dGFkb3IgVG9ycmUiLCJleHRlbnNpb24iOiIzMTIwMCJ9LHsiY29udGFjdCI6IkNvbnN1bHRhIEV4dGVybmEiLCJleHRlbnNpb24iOiIzMTIwMSJ9LHsiY29udGFjdCI6IkNvbnN1bHRhIEV4dGVybmEgMiIsImV4dGVuc2lvbiI6IjMxMjAyIn0seyJjb250YWN0IjoiQ29uc3VsdG9yaW8gR2luZWNvbG9naWEiLCJleHRlbnNpb24iOiIzMTE4MSJ9LHsiY29udGFjdCI6IkNvbnN1bHRvcmlvIE1lZGljaW5hIEdlbmVyYWwiLCJleHRlbnNpb24iOiIzMTE4MiJ9LHsiY29udGFjdCI6IkNvbnN1bHRvcmlvIFBlZGlhdHJpYSIsImV4dGVuc2lvbiI6IjMxMTgzIn0seyJjb250YWN0IjoiQ29uc3VsdG9yaW8gZG9zIiwiZXh0ZW5zaW9uIjoiMzEwMDgifSx7ImNvbnRhY3QiOiJDb25zdWx0b3JpbyB1bm8iLCJleHRlbnNpb24iOiIzMTAwOSJ9LHsiY29udGFjdCI6IkNvbnRhZG9yIEFsZWphbmRybyBLYXJpbSBNZW5kaWV0YSBDaGF2ZXoiLCJleHRlbnNpb24iOiIzMTAyOSJ9LHsiY29udGFjdCI6IkNvbnRhZG9yIEJ1bGZyYW5vIE9zb3JpbyBBbmRyYWRlIiwiZXh0ZW5zaW9uIjoiMzEwMzMifSx7ImNvbnRhY3QiOiJDb250YWRvcmEgTGlsaWFuYSBCZXJlbmljZSBTb3NhIFVyaWJlIiwiZXh0ZW5zaW9uIjoiMzEwNDAifSx7ImNvbnRhY3QiOiJDb250YWRvcmEgQWxtYSBEZWxpYSBQb3NhZGFzIExvbWEiLCJleHRlbnNpb24iOiIzMTA2MyJ9LHsiY29udGFjdCI6IkNvbnRhZG9yYSBNb250c2VycmF0IE1hcnRpbmV6IFNhbmNoZXoiLCJleHRlbnNpb24iOiIzMTA1NSJ9LHsiY29udGFjdCI6IkNIQS1HRVJFTlRFIENPTlRBQkxFLUJFTkpBTUlOIERFTCBSSU8gRUxJQVMiLCJleHRlbnNpb24iOiIzMTA0MyJ9LHsiY29udGFjdCI6IkNvbnRhZG9yYSBZZW5lbGlkYSBHdXptw6FuIFJvamFzIiwiZXh0ZW5zaW9uIjoiMzEwNTEifSx7ImNvbnRhY3QiOiJEYXJpbyBWw6F6cXVleiBIZXJuw6FuZGV6IiwiZXh0ZW5zaW9uIjoiMzEwMzIifSx7ImNvbnRhY3QiOiJEZXNjYW5zbyBkZSBNZWRpY29zIiwiZXh0ZW5zaW9uIjoiMzEwMjcifSx7ImNvbnRhY3QiOiJDSEEtU3VwZXJ2aXNpb24gZGUgTWVzYSBkZSBDb250cm9sIiwiZXh0ZW5zaW9uIjoiMzEwNjgifSx7ImNvbnRhY3QiOiJDSEEtVVJHRU5DSUFTIiwiZXh0ZW5zaW9uIjoiMzEwMTMifSx7ImNvbnRhY3QiOiJEci4gSm9yZ2UgSHVlcnRhIFRvcnJpam9zIiwiZXh0ZW5zaW9uIjoiMzEwOTEifSx7ImNvbnRhY3QiOiJEci4gSm9zw6kgSnVhbiBHYXJjw61hIE5hdmFycmV0ZSBVQ0MiLCJleHRlbnNpb24iOiIzMTAxMiJ9LHsiY29udGFjdCI6IkRyLiBMdWlzIEFsYmVydG8gRXNjw6FyY2VnYSBSaW5jw7NuIiwiZXh0ZW5zaW9uIjoiMzEwOTcifSx7ImNvbnRhY3QiOiJEcmEuIEJlYXRyaXogRWxlbmEgQ2FubyBGYW5vIiwiZXh0ZW5zaW9uIjoiMzEwMjQifSx7ImNvbnRhY3QiOiIiLCJleHRlbnNpb24iOiIzMTAyMSJ9LHsiY29udGFjdCI6IkNIQS1KRUZBVFVSQSBERSBHSU5FQ09MT0dJQS1ST0RSSUdPIFJVSVogVkFaUVVFWiIsImV4dGVuc2lvbiI6IjMxMDIzIn0seyJjb250YWN0IjoiRWplY3V0aXZvcyBkZSBhZG1pc2nDs24iLCJleHRlbnNpb24iOiIzMTAwMSJ9LHsiY29udGFjdCI6IkVtZXJnZW5jaWFzIiwiZXh0ZW5zaW9uIjoiMzExODgifSx7ImNvbnRhY3QiOiJIRU1PRElOQU1JQSIsImV4dGVuc2lvbiI6IjMxMTAxIn0seyJjb250YWN0IjoiTWFyaWEgZGUgbG9zIEFuZ2VsZXMgQW5kcmFkZSIsImV4dGVuc2lvbiI6IjMxMDM3In0seyJjb250YWN0IjoiVW5pZGFkIGRlIFF1aW1pb3RlcmFwaWEiLCJleHRlbnNpb24iOiIzMTEwNyJ9LHsiY29udGFjdCI6IkZhcm1hY2lhIDEiLCJleHRlbnNpb24iOiIzMTEwOSJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMjAyIiwiZXh0ZW5zaW9uIjoiMzExMTEifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDIwMyIsImV4dGVuc2lvbiI6IjMxMTEyIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAyMDQiLCJleHRlbnNpb24iOiIzMTExMyJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMjA1IiwiZXh0ZW5zaW9uIjoiMzExMTQifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDIwNiIsImV4dGVuc2lvbiI6IjMxMTE1In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAyMDciLCJleHRlbnNpb24iOiIzMTExNiJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMjA4IiwiZXh0ZW5zaW9uIjoiMzExMTcifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDIwOCIsImV4dGVuc2lvbiI6IjMxMTE4In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAyMTAiLCJleHRlbnNpb24iOiIzMTExOSJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMjExIiwiZXh0ZW5zaW9uIjoiMzExMjAifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDIxMiIsImV4dGVuc2lvbiI6IjMxMTIxIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAyMTMiLCJleHRlbnNpb24iOiIzMTEyMiJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMjE0IiwiZXh0ZW5zaW9uIjoiMzExMjMifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDIxNyIsImV4dGVuc2lvbiI6IjMxMTI2In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAyMTgiLCJleHRlbnNpb24iOiIzMTEyNyJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzAxIiwiZXh0ZW5zaW9uIjoiMzExMzAifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMwMiIsImV4dGVuc2lvbiI6IjMxMTMxIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMDMiLCJleHRlbnNpb24iOiIzMTEzMiJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzA0IiwiZXh0ZW5zaW9uIjoiMzExMzMifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMwNSIsImV4dGVuc2lvbiI6IjMxMTM0In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMDYiLCJleHRlbnNpb24iOiIzMTEzNSJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzA3IiwiZXh0ZW5zaW9uIjoiMzExMzYifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMwOCIsImV4dGVuc2lvbiI6IjMxMTM3In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMDkiLCJleHRlbnNpb24iOiIzMTEzOCJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzEwIiwiZXh0ZW5zaW9uIjoiMzExMzkifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMxMSIsImV4dGVuc2lvbiI6IjMxMTQwIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMTIiLCJleHRlbnNpb24iOiIzMTE0MSJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzEzIiwiZXh0ZW5zaW9uIjoiMzExNDIifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMxNCIsImV4dGVuc2lvbiI6IjMxMTQzIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMTUiLCJleHRlbnNpb24iOiIzMTE0NCJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzE2IiwiZXh0ZW5zaW9uIjoiMzExNDUifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMxNyIsImV4dGVuc2lvbiI6IjMxMTQ2In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiAzMTgiLCJleHRlbnNpb24iOiIzMTE0NyJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gMzE5IiwiZXh0ZW5zaW9uIjoiMzExNDgifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDMyMCIsImV4dGVuc2lvbiI6IjMxMTQ5In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MDEiLCJleHRlbnNpb24iOiIzMTE1MCJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDAyIiwiZXh0ZW5zaW9uIjoiMzExNTEifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQwMyIsImV4dGVuc2lvbiI6IjMxMTUyIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MDQiLCJleHRlbnNpb24iOiIzMTE1MyJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDA1IiwiZXh0ZW5zaW9uIjoiMzExNTQifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQwNiIsImV4dGVuc2lvbiI6IjMxMTU1In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MDciLCJleHRlbnNpb24iOiIzMTE1NiJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDA4IiwiZXh0ZW5zaW9uIjoiMzExNTcifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQwOSIsImV4dGVuc2lvbiI6IjMxMTU4In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MTAiLCJleHRlbnNpb24iOiIzMTE1OSJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDExIiwiZXh0ZW5zaW9uIjoiMzExNjAifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQxMiIsImV4dGVuc2lvbiI6IjMxMTYxIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MTMtMSIsImV4dGVuc2lvbiI6IjMxOTEzIn0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MTQiLCJleHRlbnNpb24iOiIzMTE2MyJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDE1IiwiZXh0ZW5zaW9uIjoiMzExNjQifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQxNiIsImV4dGVuc2lvbiI6IjMxMTY1In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MTciLCJleHRlbnNpb24iOiIzMTE2NiJ9LHsiY29udGFjdCI6IkhhYml0YWNpb24gNDE4IiwiZXh0ZW5zaW9uIjoiMzExNjcifSx7ImNvbnRhY3QiOiJIYWJpdGFjaW9uIDQxOSIsImV4dGVuc2lvbiI6IjMxMTY4In0seyJjb250YWN0IjoiSGFiaXRhY2lvbiA0MjAiLCJleHRlbnNpb24iOiIzMTE2OSJ9LHsiY29udGFjdCI6IklHU0EgQ0FKQSIsImV4dGVuc2lvbiI6IjMxMDc1In0seyJjb250YWN0IjoiSWRhbGlhIEVzY2FtaWxsYSIsImV4dGVuc2lvbiI6IjMxMDk5In0seyJjb250YWN0IjoiSW5nLiBBbGFuIE9ydGl6IiwiZXh0ZW5zaW9uIjoiMzEwODMifSx7ImNvbnRhY3QiOiJJbmcuIEFsZnJlZG8gQ3J1eiBIZXJuYW5kZXoiLCJleHRlbnNpb24iOiIzMTA4MSJ9LHsiY29udGFjdCI6IkluZy4gQnJheWFuIEFsZXhpcyBMb3phbm8gQ3Jpc29zdG9tbyIsImV4dGVuc2lvbiI6IjMxMDYwIn0seyJjb250YWN0IjoiSW5nLiBEYXZpZCBVZ2FsZGUgUmlvcyIsImV4dGVuc2lvbiI6IjMxMTA4In0seyJjb250YWN0IjoiSW5nLiBFZHVhcmRvIEZyaWFzIEdhcmPDrWEiLCJleHRlbnNpb24iOiIzMTA2NyJ9LHsiY29udGFjdCI6IkpvcmdlIEFybWFuZG8gUGXDsWEgRXN0cmFkYSIsImV4dGVuc2lvbiI6IjMxMDYxIn0seyJjb250YWN0IjoiSmF6bWluIFJvYSIsImV4dGVuc2lvbiI6IjMxMDM0In0seyJjb250YWN0IjoiSmVzw7pzIE1vcmVubyBBcnphdGUiLCJleHRlbnNpb24iOiIzMTAzNiJ9LHsiY29udGFjdCI6IkVOc2XDsWFuemEgTGljLiBZYWVsIEhlcm5hbmRleiIsImV4dGVuc2lvbiI6IjMxMDUzIn0seyJjb250YWN0IjoiTGljLiBBZ3VzdGluIEZyYW5jbyBHb256w6FsZXoiLCJleHRlbnNpb24iOiIzMTA0MiJ9LHsiY29udGFjdCI6IkVtYmFqYWRvcmVzIEV4cGVyaWVuY2lhIGEgQ2xpZW50ZSIsImV4dGVuc2lvbiI6IjMxMDgyIn0seyJjb250YWN0IjoiTGljLiBBbGV4YSBNb250ZXMiLCJleHRlbnNpb24iOiIzMTAyMCJ9LHsiY29udGFjdCI6IkxpYy4gVmlhbmV5IFBhb2xhIE9icmVnw7NuIFNhbnRpYWdvIiwiZXh0ZW5zaW9uIjoiMzEwNTIifSx7ImNvbnRhY3QiOiJTdWIgQ2V5ZSIsImV4dGVuc2lvbiI6IjMxMDI4In0seyJjb250YWN0IjoiTGljLiBFLiBTYWxvbcOzbiBHYWxpbmRvIEhlcm7DoW5kZXoiLCJleHRlbnNpb24iOiIzMTA1OSJ9LHsiY29udGFjdCI6IkxpYy4gRWR1YXJkbyBNYXJxdWV6IiwiZXh0ZW5zaW9uIjoiMzEwNjkifSx7ImNvbnRhY3QiOiJMaWMuIEdvbnrDoWxvIFJlc8OpbmRpeiBBbGFyY8OzbiIsImV4dGVuc2lvbiI6IjMxMDY0In0seyJjb250YWN0IjoiTGljLiBKb25hdGhhbiBVcnJ1dGlhIENydXoiLCJleHRlbnNpb24iOiIzMTA0MSJ9LHsiY29udGFjdCI6IkxpYy4gS2FyaW5hIEhlcm7DoW5kZXogQXJjZSIsImV4dGVuc2lvbiI6IjMxMDI1In0seyJjb250YWN0IjoiTGljLiBLYXJpbmEgT3J0ZWdhIEhlcm5hbmRleiIsImV4dGVuc2lvbiI6IjMxMDAyIn0seyJjb250YWN0IjoiTGljLiBNaXJpYW0gTWVuZG96YSBHw7NtZXoiLCJleHRlbnNpb24iOiIzMTI2MCJ9LHsiY29udGFjdCI6IkxpYy4gTWlyaWFtIE1vcmFsZXMiLCJleHRlbnNpb24iOiIzMTA0OCJ9LHsiY29udGFjdCI6IkxpYy4gTcOzbmljYSBUb3JyZXMgTW9ucnJlYWwiLCJleHRlbnNpb24iOiIzMTA1NyJ9LHsiY29udGFjdCI6IkxpYy4gTm9yYSBHb256YWxleiBTYW5jaGV6IiwiZXh0ZW5zaW9uIjoiMzEwMTQifSx7ImNvbnRhY3QiOiJMaWMuIFJpY2FyZG8gUm9kcsOtZ3VleiBMw7NwZXoiLCJleHRlbnNpb24iOiIzMTA2MiJ9LHsiY29udGFjdCI6IkxpYy4gUm9jaW8gUm9qYXMgUm9qbyIsImV4dGVuc2lvbiI6IjMxMDQ5In0seyJjb250YWN0IjoiTGljLiBSb2xhbmRvIFNvc2EgTWFydGluZXoiLCJleHRlbnNpb24iOiIzMTAwNyJ9LHsiY29udGFjdCI6IkxpYy4gT2xpdmlhIENyaXN0aW5hIEdhcmNpYSBDaGF2aXJhIiwiZXh0ZW5zaW9uIjoiMzEwNTAifSx7ImNvbnRhY3QiOiJMaWMuIFlhZWwgSGVybsOhbmRleiBWw6F6cXVleiIsImV4dGVuc2lvbiI6IjMxMDcyIn0seyJjb250YWN0IjoiVUNDIiwiZXh0ZW5zaW9uIjoiMzExMDAifSx7ImNvbnRhY3QiOiJVVEkgTUVEIiwiZXh0ZW5zaW9uIjoiMzEwNzEifSx7ImNvbnRhY3QiOiJMaWMuIFlhbmVsbHkgQmFycmVyYSBNb250ZXMgZGUgT2NhIiwiZXh0ZW5zaW9uIjoiMzEwODYifSx7ImNvbnRhY3QiOiJRVUlST0ZBTk8iLCJleHRlbnNpb24iOiIzMTAxOSJ9LHsiY29udGFjdCI6IlBST0dSQU1BQ0lPTiBRVUlST0ZBTk8iLCJleHRlbnNpb24iOiIzMTAyNiJ9LHsiY29udGFjdCI6IiIsImV4dGVuc2lvbiI6IjMxMDk4In0seyJjb250YWN0IjoiU3VwZXJ2aWNpb24gZGUgRmFjdHVyYWNpb24gTWFyaWEgZGUgbG9zIEFuZ2VsZXMiLCJleHRlbnNpb24iOiIzMTA0NCJ9LHsiY29udGFjdCI6Ik1lc2EgQXNlZ3VyYWRvcmFzIDIiLCJleHRlbnNpb24iOiIzMTA5NCJ9LHsiY29udGFjdCI6IkplZmUgTWVzYSBkZSBDb250cm9sIiwiZXh0ZW5zaW9uIjoiMzEwMDMifSx7ImNvbnRhY3QiOiJNZXNhIGRlIEFzZWd1cmFkb3JhcyIsImV4dGVuc2lvbiI6IjMxMDE1In0seyJjb250YWN0IjoiTW9kdWxvIEluYnVyc2EiLCJleHRlbnNpb24iOiIzMTI4MCJ9LHsiY29udGFjdCI6Ik51dHJpY2lvbiBIb3NwaXRhbGFyaWEiLCJleHRlbnNpb24iOiIzMTA3NiJ9LHsiY29udGFjdCI6IlFGQi4gRWR1YXJkbyBWZWxhc2NvIEVzcGlub3NhIiwiZXh0ZW5zaW9uIjoiMzEwNzMifSx7ImNvbnRhY3QiOiJRRkkuIEFyYW56YSBBbmhlbCBNb3JhbGVzIEdvbnrDoWxleiIsImV4dGVuc2lvbiI6IjMxMDY2In0seyJjb250YWN0IjoiUXVpbWljYSBNYXJpYSBUZXJlc2EgR2FsaWNpYSBFc3RyYWRhIiwiZXh0ZW5zaW9uIjoiMzEwOTYifSx7ImNvbnRhY3QiOiJSZWNlcGNpb24gQ29ubXV0YWRvciAzIiwiZXh0ZW5zaW9uIjoiMzExOTcifSx7ImNvbnRhY3QiOiJSZWNlcGNpb24gTGFib3JhdG9yaW8iLCJleHRlbnNpb24iOiIzMTAwNiJ9LHsiY29udGFjdCI6IlJlY2VwY2nDs24gQ29ubXV0YWRvciA0IiwiZXh0ZW5zaW9uIjoiMzExOTgifSx7ImNvbnRhY3QiOiJSZWNlcGNpw7NuIExhYm9yYXRvcmlvIiwiZXh0ZW5zaW9uIjoiMzEwOTUifSx7ImNvbnRhY3QiOiJSZWNlcGNpw7NuIGltYWdlbm9sb2fDrWEiLCJleHRlbnNpb24iOiIzMTAwNCJ9LHsiY29udGFjdCI6IlJlaGFiaWxpdGFjaW9uIEhTQUlDIiwiZXh0ZW5zaW9uIjoiMzEyMDUifSx7ImNvbnRhY3QiOiJSZXNpZGVuY2lhIE1lZGljYSIsImV4dGVuc2lvbiI6IjMxMTc1In0seyJjb250YWN0IjoiU2VndXJpZGFkIFJlY2VwY2lvbiIsImV4dGVuc2lvbiI6IjMxMTg5In0seyJjb250YWN0IjoiU3VtaW5pc3Ryb3MgUGlzb3MiLCJleHRlbnNpb24iOiIzMTA3NCJ9LHsiY29udGFjdCI6IlN1cGVydmlzb3JlcyBkZSBlbmZlcm1lcsOtYSIsImV4dGVuc2lvbiI6IjMxMDU0In0seyJjb250YWN0IjoiVMOpYy4gT21hciBBZG9sZm8gR3V0acOpcnJleiBHdXRpw6lycmV6IiwiZXh0ZW5zaW9uIjoiMzEwNzAifSx7ImNvbnRhY3QiOiJVbmlkYWQgZGUgRW5kb3Njb3BpYSIsImV4dGVuc2lvbiI6IjMxMTA1In0seyJjb250YWN0IjoibGlicmUgTW9udGVzIGRlIE9jYSIsImV4dGVuc2lvbiI6IjMxOTkwIn0seyJjb250YWN0IjoibW9kIHNhbmFuZ2VsaW5uIiwiZXh0ZW5zaW9uIjoiMzEwODAifV0sIkNvdW50IjoyMjN9Cn0="))));
+
+
+function filterExtensions() {
+  const searchInput = document.getElementById('searchInput');
+  if (!searchInput) return;
+
+  const term = searchInput.value.toLowerCase().trim();
+  let shown = 0;
+
+  document.querySelectorAll('#extensionsTable tbody tr').forEach(row => {
+    const ok = row.textContent.toLowerCase().includes(term);
+    row.style.display = ok ? '' : 'none';
+    if (ok) shown++;
+  });
+
+  const none = document.getElementById('noResults');
+  if (none) none.hidden = !term || shown > 0;
+}
+
+function checkResponse(response) {
+  if (!response.ok) {
+    throw new Error(`Error HTTP ${response.status} al cargar ${response.url}`);
+  }
+  return response.json();
+}
+
+function makeLink(item, className) {
+  const a = document.createElement('a');
+  if (className) a.className = className;
+  a.href = item.url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = item.name;
+  return a;
+}
+
+async function loadExtensionsWithAuth() {
+  const tbody = document.querySelector('#extensionsTable tbody');
+  if (!tbody) return;
+
+  function showMessage(message) {
+    tbody.replaceChildren();
+
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+
+    td.colSpan = 2;
+    td.textContent = message;
+
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+
+    const none = document.getElementById('noResults');
+    if (none) none.hidden = true;
+  }
+
+  try {
+    const response = await Promise.resolve({ ok: true, json: async () => PORTAL_DATA.extensiones.value });
+
+    if (!response.ok) {
+      throw new Error(
+        `No se pudieron cargar las extensiones (HTTP ${response.status}).`
+      );
+    }
+
+    const extensions = await response.json();
+
+    if (!Array.isArray(extensions)) {
+      throw new Error('La respuesta del servidor no tiene el formato esperado.');
+    }
+
+    tbody.replaceChildren();
+
+    extensions.forEach(item => {
+      const tr = document.createElement('tr');
+      const contact = document.createElement('td');
+      const extension = document.createElement('td');
+
+      contact.textContent = item.contact ?? '';
+      extension.textContent = item.extension ?? '';
+
+      tr.append(contact, extension);
+      tbody.appendChild(tr);
+    });
+
+    filterExtensions();
+
+    if (extensions.length === 0) {
+      showMessage('No hay extensiones disponibles.');
+    }
+  } catch (error) {
+    console.error('Error al cargar las extensiones:', error);
+    showMessage('No se pudieron cargar las extensiones. Revisa el servidor.');
+  }
+}
+async function loadPortalData() {
+  const warningId = 'portal-load-warning';
+
+  try {
+    const [quickLinks, maintenance, accesses, staff] = await Promise.all([
+      Promise.resolve(PORTAL_DATA.enlaces.value),
+      Promise.resolve(PORTAL_DATA.mantenimiento.value),
+      Promise.resolve(PORTAL_DATA.accesos.value),
+      Promise.resolve(PORTAL_DATA.personal.value)
+    ]);
+
+    const quickLinksList = document.getElementById('quickLinksList');
+
+    if (quickLinksList) {
+      quickLinksList.replaceChildren();
+      quickLinks.forEach(item => {
+        quickLinksList.appendChild(makeLink(item, 'link'));
+      });
+    }
+
+    const maintenanceList = document.getElementById('maintenanceList');
+
+    if (maintenanceList) {
+      maintenanceList.replaceChildren();
+      maintenance.forEach(item => {
+        const li = document.createElement('li');
+        li.appendChild(makeLink(item));
+        maintenanceList.appendChild(li);
+      });
+    }
+
+    const staffList = document.getElementById('staffList');
+
+    if (staffList) {
+      staffList.replaceChildren();
+
+      staff.forEach((item, n) => {
+        const card = document.createElement('div');
+        card.className = 'staff-card rise';
+        card.style.setProperty('--n', n);
+
+        const photo = document.createElement('div');
+        photo.className = 'photo-placeholder';
+        photo.textContent = item.initial || '';
+
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = item.name || '';
+
+        const area = document.createElement('div');
+        area.className = 'area';
+        area.textContent = item.area || '';
+
+        card.append(photo, name, area);
+        staffList.appendChild(card);
+      });
+    }
+
+    const rightColumn = document.querySelector('.right-column');
+
+    if (rightColumn) {
+      rightColumn.replaceChildren();
+
+      accesses.forEach((item, n) => {
+        const a = makeLink(item, item.className);
+        a.classList.add('rise');
+        a.style.setProperty('--n', n);
+        rightColumn.appendChild(a);
+      });
+    }
+
+    document.getElementById(warningId)?.remove();
+  } catch (error) {
+    console.error('No fue posible cargar los datos del portal:', error);
+
+    let warning = document.getElementById(warningId);
+
+    if (!warning) {
+      warning = document.createElement('div');
+      warning.id = warningId;
+      warning.className = 'warn';
+      warning.setAttribute('role', 'alert');
+      document.querySelector('.layout')?.prepend(warning);
+    }
+
+    warning.textContent =
+      'No se pudieron cargar los datos del portal. ' +
+      'Verifica que el servidor esté iniciado y revisa la terminal.';
+  }
+
+  await loadExtensionsWithAuth();
+}
+
+const notepad = document.getElementById('notepad');
+
+if (notepad) {
+  try {
+    notepad.value = localStorage.getItem('notes') || '';
+  } catch (e) {}
+
+  notepad.addEventListener('input', () => {
+    try {
+      localStorage.setItem('notes', notepad.value);
+    } catch (e) {}
+  });
+}
+
+const themeButtons = document.querySelectorAll('[data-theme-set]');
+
+const syncTheme = () => {
+  themeButtons.forEach(button => {
+    button.setAttribute(
+      'aria-pressed',
+      String(button.dataset.themeSet === document.documentElement.dataset.pref)
+    );
+  });
+};
+
+themeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    applyTheme(button.dataset.themeSet, true);
+
+    try {
+      localStorage.setItem('theme', button.dataset.themeSet);
+    } catch (e) {}
+
+    syncTheme();
+  });
+});
+
+syncTheme();
+
+const revealPortal = () => {
+  document.documentElement.classList.remove('enter-hold');
+};
+
+const imagesReady = Promise.all(
+  [...document.querySelectorAll('.top img, .poster-img')].map(img =>
+    img.complete
+      ? null
+      : new Promise(done => {
+          img.addEventListener('load', done, { once: true });
+          img.addEventListener('error', done, { once: true });
+        })
+  )
+);
+
+setTimeout(revealPortal, 900);
+
+document.addEventListener('DOMContentLoaded', () => {
+  Promise.all([loadPortalData(), imagesReady]).then(revealPortal, revealPortal);
+});
+
+(() => {
+  const image = document.getElementById('golondrinosImage');
+  const link = document.getElementById('golondrinosLink');
+  const caption = document.getElementById('golondrinosCaption');
+  const subtitle = document.getElementById('golondrinosSub');
+
+  if (!image || !link || !caption || !subtitle) return;
+
+  const slides = [
+    {
+      image: './img.png',
+      title: '¡Sumemos juntos a nuestra ofrenda de Día de Muertos!',
+      text: 'En HSAIC queremos crear una ofrenda llena de tradición, color y cariño en Burdeos. Invitamos a nuestros colaboradores a sumarse voluntariamente con algún detalle para decorarla. Puedes aportar flor de cempasúchil, papel picado, adornos alusivos al Día de Muertos u otros detalles decorativos. Entrega tus aportaciones en la Coordinación de Capacitación y Desarrollo con la Lic. Vianey Obregón. ¡Cada detalle cuenta! Gracias por compartir con nosotros el cariño por nuestras tradiciones.'
+    },
+    {
+      image: './img1.png',
+      title: 'Políticas para asistir disfrazados',
+      text: 'Se permite vestir prendas o disfraces alusivos a la festividad. El disfraz deberá ser apropiado para el ambiente laboral y permitir el desempeño seguro de las actividades. Evita prendas excesivamente cortas, ajustadas o reveladoras. No se permitirán disfraces ofensivos, inapropiados o que puedan incomodar a pacientes y familiares.'
+    },
+    {
+      image: './img2.png',
+      title: 'Pasarela de disfraces HSAIC',
+      text: '¡Regístrate! Escanea el código QR para participar. Día: 30 de octubre. Lugar: auditorios de Torre Médica. Horario: 14:30 a 15:30 h. ¡Te esperamos!'
+    },
+    {
+      image: './img3.png',
+      title: 'Políticas de decoración de Día de Muertos',
+      text: 'Periodo: del 26 de octubre al 3 de noviembre. Instalaciones: utiliza decoraciones que no dañen las instalaciones ni interfieran con las actividades. Alimentos: no se permite colocar comida como parte de la decoración. Seguridad: no utilices líquidos, materiales inflamables ni sangre artificial. Respeto: evita elementos ofensivos, bromas de mal gusto o imágenes inapropiadas. Áreas críticas y de atención a pacientes: la decoración deberá ser mínima, discreta y no interferir con la atención ni la seguridad del paciente.'
+    }
+  ];
+
+  const interval = 20000;
+  const fadeDuration = 900;
+
+  let currentIndex = 0;
+  let changing = false;
+
+  slides.forEach(slide => {
+    const preload = new Image();
+    preload.src = slide.image;
+  });
+
+  function changeSlide() {
+    if (changing) return;
+
+    const nextIndex = (currentIndex + 1) % slides.length;
+    const nextSlide = slides[nextIndex];
+    const preload = new Image();
+
+    changing = true;
+
+    preload.onload = () => {
+      image.classList.add('is-changing');
+      caption.classList.add('is-changing');
+      subtitle.classList.add('is-changing');
+
+      setTimeout(() => {
+        image.src = nextSlide.image;
+        image.alt = nextSlide.title;
+        link.href = nextSlide.image;
+
+        caption.textContent = nextSlide.title;
+        subtitle.textContent = nextSlide.text;
+
+        currentIndex = nextIndex;
+
+        requestAnimationFrame(() => {
+          image.classList.remove('is-changing');
+          caption.classList.remove('is-changing');
+          subtitle.classList.remove('is-changing');
+
+          setTimeout(() => {
+            changing = false;
+          }, fadeDuration);
+        });
+      }, fadeDuration);
+    };
+
+    preload.onerror = () => {
+      changing = false;
+      console.error('No se pudo cargar la imagen:', nextSlide.image);
+    };
+
+    preload.src = nextSlide.image;
+  }
+
+  setInterval(changeSlide, interval);
+})();
+</script>
+
+<script src="./config.js"></script>
+<script src="./webmeji.js"></script>
+<script src="./frases.js"></script>
+
+</html>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const caja = document.getElementById("efemerides");
+  const boton = document.getElementById("btnCambiarEfemerides");
+  const contenido = document.getElementById("contenidoSabiasQue");
+
+  if (!caja || !boton || !contenido) {
+    console.error("No se encontró el recuadro, el botón o el contenido.");
+    return;
+  }
+
+  const elementosOriginales = Array.from(caja.children)
+    .filter(el => el !== boton && el !== contenido);
+
+  const fecha = new Date();
+  const clave = String(fecha.getMonth() + 1).padStart(2, "0") +
+                "-" + String(fecha.getDate()).padStart(2, "0");
+
+  const datos = {
+    "10-26": {
+      titulo: "¿Sabías que?",
+      texto: "El 26 de octubre de 1842, Nicolás Bravo asumió la Presidencia de México.",
+      extra: "En 1885, Louis Pasteur presentó resultados importantes sobre la inmunización contra la rabia."
+    }
+  };
+
+  const dato = datos[clave] || {
+    titulo: "¿Sabías que?",
+    texto: "Cada día ocurrieron acontecimientos que cambiaron la historia.",
+    extra: "La ciencia, la cultura y los avances tecnológicos también tienen fechas importantes que vale la pena conocer."
+  };
+
+  contenido.replaceChildren();
+
+  const titulo = document.createElement("h3");
+  titulo.textContent = dato.titulo;
+
+  const texto = document.createElement("p");
+  texto.textContent = dato.texto;
+
+  const extra = document.createElement("p");
+  extra.textContent = dato.extra;
+
+  contenido.append(titulo, texto, extra);
+  contenido.hidden = true;
+
+  let mostrandoDatos = false;
+
+  boton.textContent = "➜";
+  boton.style.display = "flex";
+  boton.style.position = "absolute";
+  boton.style.right = "12px";
+  boton.style.bottom = "12px";
+  boton.style.zIndex = "20";
+  boton.style.cursor = "pointer";
+
+  boton.addEventListener("click", function () {
+    mostrandoDatos = !mostrandoDatos;
+
+    elementosOriginales.forEach(el => {
+      el.hidden = mostrandoDatos;
+    });
+
+    contenido.hidden = !mostrandoDatos;
+    boton.textContent = mostrandoDatos ? "←" : "➜";
+    boton.title = mostrandoDatos
+      ? "Volver a las efemérides"
+      : "Mostrar ¿Sabías que?";
+    boton.setAttribute("aria-label", boton.title);
+  });
+});
+</script>
+<script id="alternadorEfemerides">
+(function () {
+  const dias = [
+    {
+      fecha: "Lunes 26 de octubre",
+      titulo: "Día Nacional de Prevención de Quemaduras",
+      texto: "Esta fecha busca crear conciencia sobre la prevención de quemaduras causadas por fuego, líquidos calientes, electricidad y sustancias químicas.",
+      dato: "Muchas quemaduras pueden prevenirse: mantén las ollas y líquidos calientes lejos del borde, protege los contactos eléctricos y aleja a los niños de las fuentes de calor.",
+      imagen: "https://commons.wikimedia.org/wiki/Special:FilePath/Burns.png",
+      alt: "Material informativo oficial sobre prevención de quemaduras"
+},
+    {
+      fecha: "Martes 27 de octubre de 2026",
+      imagen: "https://shopflagworld.com/image/cache/wp/gj/products/image/catalog/products/Mexico%20Province/guerrero-state-flag-900x900w.webp",
+      alt: "Bandera del estado de Guerrero",
+      titulo: "Aniversario de la creación del estado de Guerrero",
+      texto: "En 1849 se declaró formalmente constituido el estado de Guerrero, incorporándose a la federación mexicana.",
+      curioso: "El estado lleva el nombre de Vicente Guerrero, figura importante de la Independencia de México."
+    },
+    {
+      fecha: "Miércoles 28 de octubre de 2026",
+      imagen: "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/244000/244553-Chamizal-Federal-Public-Park.jpg?h=580&amp;impolicy=fcrop&amp;q=mediumHigh&amp;w=1040",
+      alt: "Parque El Chamizal en Ciudad Juárez",
+      titulo: "El territorio de El Chamizal regresa a México",
+      texto: "En 1967, Estados Unidos realizó la entrega física a México del territorio de El Chamizal, situado en la frontera entre Ciudad Juárez y El Paso.",
+      curioso: "La disputa territorial estuvo relacionada con los cambios en el cauce del río Bravo y se resolvió mediante negociaciones diplomáticas."
+    },
+    {
+      fecha: "Jueves 29 de octubre de 2026",
+      imagen: "https://vanguardia.com.mx/binrepository/800x952/0c75/800d801/none/11604/COXA/800px-retrato_1-3298955_20221002061729.png",
+      alt: "Retrato histórico de José María Morelos y Pavón",
+      titulo: "Morelos toma Orizaba durante la Independencia",
+      texto: "En 1812, José María Morelos y Pavón tomó la ciudad de Orizaba, Veracruz, durante su campaña insurgente.",
+      curioso: "Morelos también impulsó los Sentimientos de la Nación, documento presentado en 1813 que planteaba principios para organizar una nación independiente."
+    },
+    {
+      fecha: "Viernes 30 de octubre de 2026",
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Francisco_I_Madero.jpg",
+      alt: "Retrato histórico de Francisco I. Madero",
+      titulo: "Natalicio de Francisco I. Madero",
+      texto: "Francisco I. Madero nació el 30 de octubre de 1873. Fue una figura central de la Revolución Mexicana y promovió el lema de sufragio efectivo y no reelección.",
+      curioso: "Su libro La sucesión presidencial en 1910 cuestionó la continuidad de Porfirio Díaz en el poder y ayudó a impulsar la oposición política."
+    },
+    {
+      fecha: "Sábado 31 de octubre de 2026",
+      imagen: "https://memoriapoliticademexico.org/Efemerides/10/Img/1914-Oct-1914_0001_2.jpg",
+      alt: "Fotografía histórica de la Convención de Aguascalientes",
+      titulo: "La Convención de Aguascalientes desconoce a Carranza",
+      texto: "En 1914, la Convención revolucionaria desconoció a Venustiano Carranza como Primer Jefe del Ejército Constitucionalista, en medio de las diferencias entre las facciones revolucionarias.",
+      curioso: "La Revolución Mexicana no fue un movimiento uniforme: sus principales líderes tenían proyectos políticos y sociales diferentes."
+    },
+    {
+      fecha: "Domingo 1 de noviembre de 2026",
+      imagen: "https://heraldodemexico.com.mx/u/fotografias/m/2025/9/24/f768x1-1187266_1187393_5050.png",
+      alt: "Ofrenda tradicional mexicana de Día de Muertos",
+      titulo: "Todos los Santos: comienzan las fechas centrales de Día de Muertos",
+      texto: "El 1 de noviembre se celebra Todos los Santos y, en muchas comunidades mexicanas, se recuerda especialmente a los niños fallecidos. El 2 de noviembre se dedica a los Fieles Difuntos. Ambas fechas forman parte de las celebraciones de Día de Muertos.",
+      curioso: "Las ofrendas suelen incluir fotografías, veladoras, flores de cempasúchil y alimentos. Las formas de celebrar varían entre comunidades y regiones de México."
+    }
+  ];
+
+  function iniciar() {
+    const contenedor = document.getElementById("vistaSemanalEfemeride");
+    const contador = document.getElementById("contadorEfemerides");
+    const anterior = document.getElementById("anteriorEfemeride");
+    const siguiente = document.getElementById("siguienteEfemeride");
+
+    if (!contenedor || !contador || !anterior || !siguiente) return;
+
+    let indice = 0;
+    let intervalo;
+    let versionAnimacion = 0;
+
+    function mostrar() {
+      const dato = dias[indice];
+      const version = ++versionAnimacion;
+
+      contenedor.classList.remove("animando");
+      contenedor.innerHTML = "";
+
+      const fecha = document.createElement("p");
+      fecha.className = "fechaEfemeride";
+      fecha.textContent = dato.fecha;
+
+      const titulo = document.createElement("h4");
+      titulo.textContent = dato.titulo;
+
+      const texto = document.createElement("p");
+      texto.textContent = dato.texto;
+
+      contenedor.append(fecha, titulo);
+
+      if (dato.imagen) {
+        const imagen = document.createElement("img");
+        imagen.className = "imagenEfemeride";
+        imagen.src = dato.imagen;
+        imagen.alt = dato.alt || dato.titulo;
+        contenedor.appendChild(imagen);
+      }
+
+      contenedor.appendChild(texto);
+
+      const botonDato = document.createElement("button");
+      botonDato.type = "button";
+      botonDato.id = "botonDatoCurioso";
+      botonDato.textContent = "¿Sabías que?";
+      botonDato.setAttribute("aria-expanded", "false");
+
+      const cajaDato = document.createElement("div");
+      cajaDato.className = "datoCurioso";
+      cajaDato.hidden = true;
+
+      const parrafoDato = document.createElement("p");
+      parrafoDato.textContent = dato.curioso ?? dato.dato ?? "";
+      cajaDato.appendChild(parrafoDato);
+
+      botonDato.addEventListener("click", function () {
+        const abrir = cajaDato.hidden;
+        cajaDato.hidden = !abrir;
+        botonDato.setAttribute("aria-expanded", String(abrir));
+        botonDato.textContent = abrir ? "Ocultar dato curioso" : "¿Sabías que?";
+      });
+
+      contenedor.append(botonDato, cajaDato);
+      contador.textContent = (indice + 1) + " de " + dias.length;
+
+      void contenedor.offsetWidth;
+      if (version === versionAnimacion) {
+        contenedor.classList.add("animando");
+      }
+    }
+
+    function cambiar(paso) {
+      contenedor.dataset.dir = paso < 0 ? "atras" : "adelante";
+      indice = (indice + paso + dias.length) % dias.length;
+      mostrar();
+      reiniciarTemporizador();
+    }
+
+    function reiniciarTemporizador() {
+      clearInterval(intervalo);
+      intervalo = setInterval(function () {
+        cambiar(1);
+      }, 20000);
+    }
+
+    anterior.addEventListener("click", function () {
+      cambiar(-1);
+    });
+
+    siguiente.addEventListener("click", function () {
+      cambiar(1);
+    });
+
+    mostrar();
+    reiniciarTemporizador();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciar);
+  } else {
+    iniciar();
+  }
+})();
+</script>
